@@ -5,9 +5,9 @@ import 'swiper/css';
 // 제품별 정보 정리
 const productData = {
   a: {
-    name: '제품 A',
-    description: '이건 제품 A에 대한 설명입니다.',
-    images: ['/product-a-1.jpg', '/product-a-2.png'], // 수정된 부분
+    name: 'NC-UVA3 Max',
+    description: '이건 A3 Max 프린터에 대한 설명입니다.',
+    images: ['/product-a-1.png', '/product-a-2.png', '/product-a-3.png'], // 수정된 부분
     pdf: '/catalog-a.pdf',
   },
   b: {
@@ -46,29 +46,32 @@ export default function ProductDetail() {
       </Swiper>
 
       {/* 버튼들 */}
-      <div className="space-y-2 pt-4">
+      <div className="flex gap-2 pt-4 justify-center">
+        {/* 상담하기 버튼 */}
         <button
-          className="w-full bg-blue-500 text-white py-2 rounded"
-          onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
+            className="flex-1 bg-blue-500 text-white py-2 rounded text-sm"
+            onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
         >
-          상담하기
+            상담하기
         </button>
 
+        {/* 홈페이지 이동 */}
         <button
-          className="w-full bg-gray-200 py-2 rounded"
-          onClick={() => window.open('https://nocai.co.kr/', '_blank')}
+            className="flex-1 bg-gray-200 text-black py-2 rounded text-sm"
+            onClick={() => window.open('https://nocai.co.kr/', '_blank')}
         >
-          홈페이지
+            홈페이지
         </button>
 
+        {/* PDF 다운로드 */}
         <a
-          href={product.pdf}
-          download
-          className="block w-full text-center bg-green-500 text-white py-2 rounded"
+            href={product.pdf}
+            download
+            className="flex-1 text-center bg-green-500 text-white py-2 rounded text-sm"
         >
-          PDF 다운로드
+            PDF 다운로드
         </a>
-      </div>
+    </div>
     </div>
   );
 }
