@@ -52,9 +52,11 @@ export default function ProductDetail() {
         </div>
       )}
 
-      <div className="px-6 py-8 space-y-8 max-w-md mx-auto">
+      <div className="px-6 py-10 space-y-10 max-w-md mx-auto bg-white rounded-2xl shadow-lg">
         {/* 제목 */}
-        <h1 className="text-3xl font-bold tracking-tight">{product.name}</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          {product.name}
+        </h1>
 
         {/* 설명 */}
         <p className="text-gray-700 text-base leading-relaxed">
@@ -95,30 +97,27 @@ export default function ProductDetail() {
         </div>
 
         {/* 버튼들 */}
-        <div className="flex gap-3 pt-4 justify-center">
-          {/* 상담하기 버튼 */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-6">
           <button
-              className="flex-1 bg-blue-500 text-white py-2 rounded text-sm"
-              onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
+            className="flex-1 bg-blue-500 hover:bg-blue-600 transition text-white py-3 rounded-xl text-base shadow"
+            onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
           >
-              상담하기
+            상담하기
           </button>
 
-          {/* 홈페이지 이동 */}
           <button
-              className="flex-1 bg-gray-200 text-black py-2 rounded text-sm"
-              onClick={() => window.open('https://nocai.co.kr/', '_blank')}
+            className="flex-1 bg-gray-100 hover:bg-gray-200 transition text-black py-3 rounded-xl text-base shadow"
+            onClick={() => window.open('https://nocai.co.kr/', '_blank')}
           >
-              홈페이지
+            홈페이지
           </button>
 
-          {/* PDF 다운로드 */}
           <a
-              href={product.pdf}
-              download
-              className="flex-1 text-center bg-green-500 text-white py-2 rounded text-sm"
+            href={product.pdf}
+            download
+            className="flex-1 text-center bg-green-500 hover:bg-green-600 transition text-white py-3 rounded-xl text-base shadow"
           >
-              PDF 다운로드
+            PDF 다운로드
           </a>
         </div>
       </div>
