@@ -50,7 +50,7 @@ export default function ProductDetail() {
               <img
                 src={src}
                 alt={`${product.name} 이미지 ${idx + 1}`}
-                className="w-full rounded-xl shadow"
+                className="w-full aspect-video object-cover rounded-2xl shadow-lg transition-transform hover:scale-105 duration-300"
               />
             </SwiperSlide>
           ))}
