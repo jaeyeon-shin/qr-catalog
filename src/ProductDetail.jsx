@@ -35,7 +35,7 @@ export default function ProductDetail() {
     <>
       <Header /> {/* 상단 로고 + 햄버거 메뉴 */}
       
-      <div className="p-4 space-y-4 max-w-md mx-auto">
+      <div className="p-4 space-y-4 max-w-md mx-auto pt-12">
         {/* 제품명 + 설명 */}
         <h1 className="text-2xl font-bold">{product.name}</h1>
         <p className="text-gray-600">{product.description}</p>
