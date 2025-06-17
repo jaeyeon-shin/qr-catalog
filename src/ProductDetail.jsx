@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import Header from './components/Header';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useState } from 'react';
 import 'swiper/css';
 
 // 제품별 정보 정리
@@ -28,12 +29,28 @@ const productData = {
 export default function ProductDetail() {
   const { id } = useParams();
   const product = productData[id];
+  const [selectedImage, setSelectedImage] = useState(null);
 
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
 
   return (
     <>
       <Header /> {/* 상단 로고 + 햄버거 메뉴 */}
+
+      {/* 이미지 모달 (Swiper 바깥, 컴포넌트 최상단에 위치) */}
+    {selectedImage && (
+      <div
+        className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+        onClick={() => setSelectedImage(null)}
+      >
+        <img
+          src={selectedImage}
+          alt="확대 이미지"
+          className="max-w-full max-h-full rounded-xl"
+        />
+      </div>
+    )}
+
       <div className="px-6 py-8 space-y-8 max-w-md mx-auto">
         {/* 제목 */}
         <h1 className="text-3xl font-bold tracking-tight">{product.name}</h1>
@@ -50,7 +67,8 @@ export default function ProductDetail() {
               <img
                 src={src}
                 alt={`${product.name} 이미지 ${idx + 1}`}
-                className="w-full aspect-video object-cover rounded-2xl shadow-lg transition-transform hover:scale-105 duration-300"
+                className="w-full aspect-video object-cover rounded-2xl shadow-lg cursor-pointer"
+                onClick={() => setSelectedImage(src)}
               />
             </SwiperSlide>
           ))}
