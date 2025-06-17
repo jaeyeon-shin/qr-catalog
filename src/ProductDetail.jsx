@@ -95,10 +95,10 @@ export default function ProductDetail() {
         </div>
 
         {/* 버튼들 */}
-        <div className="flex justify-between gap-3 pt-4 overflow-x-auto">
+        <div className="flex justify-between pt-4 flex-wrap gap-2">
           {/* 상담하기 버튼 */}
           <button
-            className="min-w-[120px] flex-1 whitespace-nowrap bg-blue-500 text-white py-2 px-4 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2"
+            className="flex-1 min-w-[100px] max-w-[160px] bg-blue-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
             onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
           >
             <MdChat className="text-lg" />
@@ -107,7 +107,7 @@ export default function ProductDetail() {
 
           {/* 홈페이지 이동 */}
           <button
-            className="min-w-[120px] flex-1 whitespace-nowrap bg-slate-600 text-white py-2 px-4 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2"
+            className="flex-1 min-w-[100px] max-w-[160px] bg-slate-600 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
             onClick={() => window.open('https://nocai.co.kr/', '_blank')}
           >
             <MdHome className="text-lg" />
@@ -118,7 +118,7 @@ export default function ProductDetail() {
           <a
             href={product.pdf}
             download
-            className="min-w-[120px] flex-1 whitespace-nowrap text-center bg-green-500 text-white py-2 px-4 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2"
+            className="flex-1 min-w-[100px] max-w-[160px] bg-green-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
           >
             <MdDownload className="text-lg" />
             상세정보
