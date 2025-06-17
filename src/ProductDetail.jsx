@@ -52,7 +52,7 @@ export default function ProductDetail() {
         </div>
       )}
 
-      <div className="px-6 py-10 space-y-10 max-w-md mx-auto bg-white rounded-2xl shadow-lg">
+      <div className="px-6 py-8 space-y-8 max-w-md mx-auto">
         {/* 제목 */}
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
           {product.name}
@@ -64,21 +64,18 @@ export default function ProductDetail() {
         </p>
 
         {/* 이미지 슬라이드 */}
-        <Swiper
-          spaceBetween={12}
-          slidesPerView={1}
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-          }}
-        >
+        <Swiper spaceBetween={12} slidesPerView={1}>
           {(product.images || []).map((src, idx) => (
             <SwiperSlide key={idx}>
-              <img
-                src={src}
-                alt={`${product.name} 이미지 ${idx + 1}`}
-                className="w-full rounded-xl shadow cursor-pointer"
-                onClick={() => setSelectedImage(src)}
-              />
+              {/* ✅ 여기 전체를 대체 */}
+              <div className="rounded-xl overflow-hidden shadow">
+                <img
+                  src={src}
+                  alt={`${product.name} 이미지 ${idx + 1}`}
+                  className="w-full object-cover"
+                  onClick={() => setSelectedImage(src)} // 확대 이미지 클릭용
+                />
+              </div>
             </SwiperSlide>
           ))}
         </Swiper>
@@ -97,16 +94,16 @@ export default function ProductDetail() {
         </div>
 
         {/* 버튼들 */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-6">
+        <div className="flex gap-2 pt-4 justify-center flex-wrap">
           <button
-            className="flex-1 bg-blue-500 hover:bg-blue-600 transition text-white py-3 rounded-xl text-base shadow"
+            className="bg-blue-500 text-white py-2 px-4 rounded text-sm whitespace-nowrap"
             onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
           >
             상담하기
           </button>
 
           <button
-            className="flex-1 bg-gray-100 hover:bg-gray-200 transition text-black py-3 rounded-xl text-base shadow"
+            className="bg-gray-200 text-black py-2 px-4 rounded text-sm whitespace-nowrap"
             onClick={() => window.open('https://nocai.co.kr/', '_blank')}
           >
             홈페이지
@@ -115,7 +112,7 @@ export default function ProductDetail() {
           <a
             href={product.pdf}
             download
-            className="flex-1 text-center bg-green-500 hover:bg-green-600 transition text-white py-3 rounded-xl text-base shadow"
+            className="text-center bg-green-500 text-white py-2 px-4 rounded text-sm whitespace-nowrap"
           >
             PDF 다운로드
           </a>
