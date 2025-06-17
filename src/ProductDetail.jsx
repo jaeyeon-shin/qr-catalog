@@ -3,6 +3,7 @@ import Header from './components/Header';
 import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import { MdChat, MdHome, MdDownload } from 'react-icons/md'; 
 
 // 제품별 정보 정리
 const productData = {
@@ -94,27 +95,33 @@ export default function ProductDetail() {
         </div>
 
         {/* 버튼들 */}
-        <div className="flex gap-2 pt-4 justify-center flex-wrap">
+        <div className="flex justify-between gap-3 pt-4 overflow-x-auto">
+          {/* 상담하기 버튼 */}
           <button
-            className="bg-blue-500 text-white py-2 px-4 rounded text-sm whitespace-nowrap"
+            className="min-w-[120px] flex-1 whitespace-nowrap bg-blue-500 text-white py-2 px-4 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2"
             onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
           >
+            <MdChat className="text-lg" />
             상담하기
           </button>
 
+          {/* 홈페이지 이동 */}
           <button
-            className="bg-gray-200 text-black py-2 px-4 rounded text-sm whitespace-nowrap"
+            className="min-w-[120px] flex-1 whitespace-nowrap bg-slate-600 text-white py-2 px-4 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2"
             onClick={() => window.open('https://nocai.co.kr/', '_blank')}
           >
+            <MdHome className="text-lg" />
             홈페이지
           </button>
 
+          {/* PDF 다운로드 */}
           <a
             href={product.pdf}
             download
-            className="text-center bg-green-500 text-white py-2 px-4 rounded text-sm whitespace-nowrap"
+            className="min-w-[120px] flex-1 whitespace-nowrap text-center bg-green-500 text-white py-2 px-4 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2"
           >
-            PDF 다운로드
+            <MdDownload className="text-lg" />
+            상세정보
           </a>
         </div>
       </div>
