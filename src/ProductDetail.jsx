@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import Header from './components/Header';
+import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useState } from 'react';
 import 'swiper/css';
 
 // 제품별 정보 정리
@@ -30,6 +30,7 @@ export default function ProductDetail() {
   const { id } = useParams();
   const product = productData[id];
   const [selectedImage, setSelectedImage] = useState(null);
+  const swiperRef = useRef(null);
 
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
 
@@ -61,18 +62,37 @@ export default function ProductDetail() {
         </p>
 
         {/* 이미지 슬라이드 */}
-        <Swiper spaceBetween={12} slidesPerView={1}>
+        <Swiper
+          spaceBetween={12}
+          slidesPerView={1}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+        >
           {(product.images || []).map((src, idx) => (
             <SwiperSlide key={idx}>
               <img
                 src={src}
                 alt={`${product.name} 이미지 ${idx + 1}`}
-                className="w-full aspect-video object-cover rounded-2xl shadow-lg cursor-pointer"
+                className="w-full rounded-xl shadow cursor-pointer"
                 onClick={() => setSelectedImage(src)}
               />
             </SwiperSlide>
           ))}
         </Swiper>
+
+        {/* ✅ 썸네일 프리뷰 */}
+        <div className="flex gap-2 pt-2 justify-center">
+          {(product.images || []).map((src, idx) => (
+            <img
+              key={idx}
+              src={src}
+              alt={`썸네일 ${idx + 1}`}
+              className="w-16 h-16 object-cover rounded cursor-pointer border hover:border-blue-500"
+              onClick={() => swiperRef.current?.slideTo(idx)}
+            />
+          ))}
+        </div>
 
         {/* 버튼들 */}
         <div className="flex gap-3 pt-4 justify-center">
