@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import Header from './components/Header';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 
@@ -31,47 +32,51 @@ export default function ProductDetail() {
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
 
   return (
-    <div className="p-4 space-y-4 max-w-md mx-auto">
-      {/* 제품명 + 설명 */}
-      <h1 className="text-2xl font-bold">{product.name}</h1>
-      <p className="text-gray-600">{product.description}</p>
+    <>
+      <Header /> {/* 상단 로고 + 햄버거 메뉴 */}
+      
+      <div className="p-4 space-y-4 max-w-md mx-auto">
+        {/* 제품명 + 설명 */}
+        <h1 className="text-2xl font-bold">{product.name}</h1>
+        <p className="text-gray-600">{product.description}</p>
 
-      {/* 이미지 슬라이드 */}
-      <Swiper spaceBetween={10} slidesPerView={1}>
-        {(product.images || []).map((src, idx) => (
-          <SwiperSlide key={idx}>
-            <img src={src} alt={`${product.name} 이미지 ${idx + 1}`} className="w-full rounded" />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+        {/* 이미지 슬라이드 */}
+        <Swiper spaceBetween={10} slidesPerView={1}>
+          {(product.images || []).map((src, idx) => (
+            <SwiperSlide key={idx}>
+              <img src={src} alt={`${product.name} 이미지 ${idx + 1}`} className="w-full rounded" />
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-      {/* 버튼들 */}
-      <div className="flex gap-2 pt-4 justify-center">
-        {/* 상담하기 버튼 */}
-        <button
-            className="flex-1 bg-blue-500 text-white py-2 rounded text-sm"
-            onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
-        >
-            상담하기
-        </button>
+        {/* 버튼들 */}
+        <div className="flex gap-2 pt-4 justify-center">
+          {/* 상담하기 버튼 */}
+          <button
+              className="flex-1 bg-blue-500 text-white py-2 rounded text-sm"
+              onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
+          >
+              상담하기
+          </button>
 
-        {/* 홈페이지 이동 */}
-        <button
-            className="flex-1 bg-gray-200 text-black py-2 rounded text-sm"
-            onClick={() => window.open('https://nocai.co.kr/', '_blank')}
-        >
-            홈페이지
-        </button>
+          {/* 홈페이지 이동 */}
+          <button
+              className="flex-1 bg-gray-200 text-black py-2 rounded text-sm"
+              onClick={() => window.open('https://nocai.co.kr/', '_blank')}
+          >
+              홈페이지
+          </button>
 
-        {/* PDF 다운로드 */}
-        <a
-            href={product.pdf}
-            download
-            className="flex-1 text-center bg-green-500 text-white py-2 rounded text-sm"
-        >
-            PDF 다운로드
-        </a>
-    </div>
-    </div>
+          {/* PDF 다운로드 */}
+          <a
+              href={product.pdf}
+              download
+              className="flex-1 text-center bg-green-500 text-white py-2 rounded text-sm"
+          >
+              PDF 다운로드
+          </a>
+        </div>
+      </div>
+    </>
   );
 }
