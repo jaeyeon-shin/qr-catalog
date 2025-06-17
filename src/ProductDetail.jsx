@@ -39,18 +39,18 @@ export default function ProductDetail() {
       <Header /> {/* 상단 로고 + 햄버거 메뉴 */}
 
       {/* 이미지 모달 (Swiper 바깥, 컴포넌트 최상단에 위치) */}
-    {selectedImage && (
-      <div
-        className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-        onClick={() => setSelectedImage(null)}
-      >
-        <img
-          src={selectedImage}
-          alt="확대 이미지"
-          className="max-w-full max-h-full rounded-xl"
-        />
-      </div>
-    )}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80 transition-opacity duration-300 animate-fade"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img
+            src={selectedImage}
+            alt="확대 이미지"
+            className="max-w-full max-h-full rounded-xl transition-transform duration-300 scale-100 hover:scale-105"
+          />
+        </div>
+      )}
 
       <div className="px-6 py-8 space-y-8 max-w-md mx-auto">
         {/* 제목 */}
