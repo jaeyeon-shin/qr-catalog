@@ -28,6 +28,7 @@ export default function ProductDetail() {
   const { id } = useParams();
   const product = productData[id];
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0); // ✅ 현재 슬라이드 index
   const swiperRef = useRef(null);
 
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
@@ -60,7 +61,8 @@ export default function ProductDetail() {
         <Swiper
           spaceBetween={12}
           slidesPerView={1}
-          onSwiper={(swiper) => (swiperRef.current = swiper)} // ✅ 슬라이더 참조 연결
+          onSwiper={(swiper) => (swiperRef.current = swiper)}
+          onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)} // ✅ 슬라이드 변경 시 인덱스 저장
         >
           {(product.images || []).map((src, idx) => (
             <SwiperSlide key={idx}>
@@ -83,8 +85,13 @@ export default function ProductDetail() {
               key={idx}
               src={src}
               alt={`썸네일 ${idx + 1}`}
-              className="w-16 h-16 object-cover rounded border cursor-pointer hover:border-blue-500"
-              onClick={() => swiperRef.current?.slideTo(idx)} // ✅ 썸네일 클릭 시 이동
+              className={`w-16 h-16 object-cover rounded border cursor-pointer transition ${
+                selectedIndex === idx ? 'border-blue-500' : 'border-gray-300'
+              }`}
+              onClick={() => {
+                swiperRef.current?.slideTo(idx);
+                setSelectedIndex(idx); // 썸네일 클릭 시 인덱스도 직접 반영
+              }}
             />
           ))}
         </div>
