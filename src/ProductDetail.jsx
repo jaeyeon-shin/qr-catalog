@@ -10,7 +10,7 @@ const productData = {
   a: {
     name: 'NC-UVA3 Max',
     description: '이건 A3 Max 프린터에 대한 설명입니다.',
-    images: ['/product-a-1.webp', '/product-a-1.webp', '/product-a-1.webp'], // 수정된 부분
+    images: ['/product-a-1.JPG', '/product-a-1.JPG', '/product-a-1.JPG'], // 수정된 부분
     pdf: '/catalog-a.pdf',
   },
   b: {
