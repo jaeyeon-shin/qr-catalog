@@ -51,7 +51,7 @@ export default function ProductDetail() {
         </div>
       )}
 
-      <div className="px-6 py-6 space-y-4 max-w-md mx-auto">
+      <div className="px-4 py-4 space-y-4 max-w-md mx-auto">
         {/* 제목 */}
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
           {product.name}
