@@ -5,7 +5,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="flex justify-between items-center p-4 border-b relative">
+    <header className="flex justify-between items-center p-2 border-b relative">
       {/* 로고 */}
       <img src="/logo.png" alt="로고" className="h-8" />
 
