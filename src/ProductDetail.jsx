@@ -148,7 +148,7 @@ export default function ProductDetail() {
           ))}
         </div>
 
-        <div className="flex justify-between pt-4 flex-wrap gap-2">
+        <div className="flex justify-between pt-2 flex-wrap gap-2">
           <button
             className="flex-1 min-w-[100px] max-w-[160px] bg-blue-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
             onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
@@ -185,7 +185,7 @@ export default function ProductDetail() {
           )}
         </div>
           {/* 회사 정보 */}
-        <div className="pt-4 text-center text-sm text-gray-500 leading-snug">
+        <div className="pt-2 text-center text-sm text-gray-500 leading-snug">
           (주)씨엠테크<br />
           인천광역시 부평구 주부토로 236<br />
           인천테크노벨리 U1센터 B동 209호, 210호<br />
