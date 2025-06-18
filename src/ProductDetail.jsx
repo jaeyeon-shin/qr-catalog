@@ -112,7 +112,7 @@ export default function ProductDetail() {
                 <img
                   src={src}
                   alt={`${product.name} 이미지 ${idx + 1}`}
-                  className={`w-full aspect-square object-cover rounded-2xl shadow-lg transition-opacity duration-700 ${
+                  className={`w-full aspect-[4/3] object-cover rounded-2xl shadow-lg transition-opacity duration-700 ${
                     loadedImages[idx] ? 'opacity-100' : 'opacity-0'
                   }`}
                   onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
@@ -184,7 +184,7 @@ export default function ProductDetail() {
             </button>
           )}
         </div>
-
+          {/* 회사 정보 */}
         <div className="pt-4 text-center text-sm text-gray-500 leading-snug">
           주소 : 인천광역시 부평구 주부토로 236<br />
           인천테크노벨리 U1센터 B동 209호, 210호<br />
