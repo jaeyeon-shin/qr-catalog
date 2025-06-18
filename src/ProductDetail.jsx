@@ -41,7 +41,7 @@ export default function ProductDetail() {
           {/* 왼쪽 화살표 */}
           {selectedIndex > 0 && (
             <button
-              className="absolute left-4 text-3xl text-gray-300 z-50"
+              className="absolute left-4 text-4xl text-gray-300 z-50"
               onClick={(e) => {
                 e.stopPropagation();
                 const newIndex = selectedIndex - 1;
@@ -64,7 +64,7 @@ export default function ProductDetail() {
           {/* 오른쪽 화살표 */}
           {selectedIndex < product.images.length - 1 && (
             <button
-              className="absolute right-4 text-3xl text-gray-300 z-50"
+              className="absolute right-4 text-4xl text-gray-300 z-50"
               onClick={(e) => {
                 e.stopPropagation();
                 const newIndex = selectedIndex + 1;
