@@ -9,7 +9,7 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 const productData = {
   a: {
     name: 'NC-UVA3 Max',
-    images: ['/product-a-1.JPG', '/product-a-2.JPG', '/product-a-3.JPG'],
+    images: ['/product-a-1.JPG', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
     pdf: '/catalog-a.pdf',
   },
   b: {
