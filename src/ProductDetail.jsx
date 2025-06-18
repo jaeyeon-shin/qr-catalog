@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import Header from './components/Header';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import { MdChat, MdHome, MdDownload } from 'react-icons/md'; 
+import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
 const productData = {
   a: {
@@ -28,7 +28,14 @@ export default function ProductDetail() {
   const product = productData[id];
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [showSwipeHint, setShowSwipeHint] = useState(true);
+  const [loadedImages, setLoadedImages] = useState({});
   const swiperRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSwipeHint(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
 
@@ -37,8 +44,10 @@ export default function ProductDetail() {
       <Header />
 
       {selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80" onClick={() => setSelectedImage(null)}>
-          {/* 왼쪽 화살표 */}
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80"
+          onClick={() => setSelectedImage(null)}
+        >
           {selectedIndex > 0 && (
             <button
               className="absolute left-4 text-4xl text-gray-300 z-50"
@@ -47,21 +56,19 @@ export default function ProductDetail() {
                 const newIndex = selectedIndex - 1;
                 setSelectedIndex(newIndex);
                 setSelectedImage(product.images[newIndex]);
-                swiperRef.current?.slideTo(newIndex); // ✅ Swiper 이동
+                swiperRef.current?.slideTo(newIndex);
               }}
             >
               ‹
             </button>
           )}
 
-          {/* 확대 이미지 */}
           <img
             src={selectedImage}
             alt="확대 이미지"
             className="max-w-full max-h-full rounded-xl"
           />
 
-          {/* 오른쪽 화살표 */}
           {selectedIndex < product.images.length - 1 && (
             <button
               className="absolute right-4 text-4xl text-gray-300 z-50"
@@ -70,7 +77,7 @@ export default function ProductDetail() {
                 const newIndex = selectedIndex + 1;
                 setSelectedIndex(newIndex);
                 setSelectedImage(product.images[newIndex]);
-                swiperRef.current?.slideTo(newIndex); // ✅ Swiper 이동
+                swiperRef.current?.slideTo(newIndex);
               }}
             >
               ›
@@ -87,21 +94,30 @@ export default function ProductDetail() {
         <Swiper
           spaceBetween={12}
           slidesPerView={1}
+          autoHeight={true}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
         >
           {(product.images || []).map((src, idx) => (
             <SwiperSlide key={idx}>
-              <div className="rounded-xl overflow-hidden shadow">
+              <div className="relative rounded-xl overflow-hidden shadow">
                 <img
                   src={src}
                   alt={`${product.name} 이미지 ${idx + 1}`}
-                  className="w-full aspect-square object-cover rounded-2xl shadow-lg"
+                  className={`w-full aspect-square object-cover rounded-2xl shadow-lg transition-opacity duration-700 ${
+                    loadedImages[idx] ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
                   onClick={() => {
                     setSelectedImage(src);
                     setSelectedIndex(idx);
                   }}
                 />
+                {idx === 0 && showSwipeHint && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-sm font-medium z-10">
+                    이미지를 좌우로 넘겨보세요 →
+                  </div>
+                )}
               </div>
             </SwiperSlide>
           ))}
@@ -141,14 +157,24 @@ export default function ProductDetail() {
             홈페이지
           </button>
 
-          <a
-            href={product.pdf}
-            download
-            className="flex-1 min-w-[100px] max-w-[160px] bg-green-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
-          >
-            <MdDownload className="text-lg" />
-            상세정보
-          </a>
+          {product.pdf ? (
+            <a
+              href={product.pdf}
+              download
+              className="flex-1 min-w-[100px] max-w-[160px] bg-green-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
+            >
+              <MdDownload className="text-lg" />
+              상세정보
+            </a>
+          ) : (
+            <button
+              disabled
+              className="flex-1 min-w-[100px] max-w-[160px] bg-gray-400 text-white py-2 px-3 rounded-lg shadow-sm cursor-not-allowed opacity-60 flex items-center justify-center gap-2 text-sm"
+            >
+              <MdDownload className="text-lg" />
+              상세정보 없음
+            </button>
+          )}
         </div>
       </div>
     </>
