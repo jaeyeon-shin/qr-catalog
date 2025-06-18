@@ -44,10 +44,16 @@ export default function ProductDetail() {
       <Header />
 
       {selectedImage && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80"
-          onClick={() => setSelectedImage(null)}
-        >
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80">
+          {/* X 닫기 버튼 */}
+          <button
+            className="absolute top-4 right-4 text-3xl text-gray-300 z-50"
+            onClick={() => setSelectedImage(null)}
+          >
+            ×
+          </button>
+
+          {/* 왼쪽 화살표 */}
           {selectedIndex > 0 && (
             <button
               className="absolute left-4 text-4xl text-gray-300 z-50"
@@ -63,12 +69,14 @@ export default function ProductDetail() {
             </button>
           )}
 
+          {/* 확대 이미지 */}
           <img
             src={selectedImage}
             alt="확대 이미지"
             className="max-w-full max-h-full rounded-xl"
           />
 
+          {/* 오른쪽 화살표 */}
           {selectedIndex < product.images.length - 1 && (
             <button
               className="absolute right-4 text-4xl text-gray-300 z-50"
