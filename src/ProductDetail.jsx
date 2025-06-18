@@ -40,36 +40,56 @@ export default function ProductDetail() {
 
       {/* 이미지 모달 */}
       {selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80">
-          {/* 왼쪽 클릭 영역 */}
-          <div
-            className="absolute left-0 top-0 bottom-0 w-1/2 z-50"
-            onClick={(e) => {
-              e.stopPropagation();
-              const prev = (selectedIndex - 1 + product.images.length) % product.images.length;
-              setSelectedImage(product.images[prev]);
-              setSelectedIndex(prev);
-            }}
-          />
-          {/* 오른쪽 클릭 영역 */}
-          <div
-            className="absolute right-0 top-0 bottom-0 w-1/2 z-50"
-            onClick={(e) => {
-              e.stopPropagation();
-              const next = (selectedIndex + 1) % product.images.length;
-              setSelectedImage(product.images[next]);
-              setSelectedIndex(next);
-            }}
-          />
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
+        >
+          {/* 닫기 버튼 */}
+          <button
+            className="absolute top-4 right-4 text-white text-2xl"
+            onClick={() => setSelectedImage(null)}
+          >
+            ×
+          </button>
+
+          {/* 왼쪽 화살표 */}
+          {selectedIndex > 0 && (
+            <button
+              className="absolute left-4 text-3xl text-gray-300"
+              onClick={() => {
+                const prev = selectedIndex - 1;
+                swiperRef.current?.slideTo(prev);
+                setSelectedImage(product.images[prev]);
+                setSelectedIndex(prev);
+              }}
+            >
+              ‹
+            </button>
+          )}
+
           {/* 이미지 */}
           <img
             src={selectedImage}
             alt="확대 이미지"
-            className="max-w-full max-h-full rounded-xl z-10"
-            onClick={() => setSelectedImage(null)}
+            className="max-w-full max-h-full rounded-xl transition-transform duration-300"
           />
+
+          {/* 오른쪽 화살표 */}
+          {selectedIndex < product.images.length - 1 && (
+            <button
+              className="absolute right-4 text-3xl text-gray-300"
+              onClick={() => {
+                const next = selectedIndex + 1;
+                swiperRef.current?.slideTo(next);
+                setSelectedImage(product.images[next]);
+                setSelectedIndex(next);
+              }}
+            >
+              ›
+            </button>
+          )}
         </div>
       )}
+
 
       <div className="px-4 py-4 space-y-4 max-w-md mx-auto">
         {/* 제목 */}
