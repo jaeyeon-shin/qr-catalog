@@ -2,10 +2,8 @@ import { useParams } from 'react-router-dom';
 import Header from './components/Header';
 import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules'; // ✅ 추가
 import 'swiper/css';
-import 'swiper/css/navigation'; // ✅ 추가
-import { MdChat, MdHome, MdDownload } from 'react-icons/md';
+import { MdChat, MdHome, MdDownload } from 'react-icons/md'; 
 
 const productData = {
   a: {
@@ -38,50 +36,41 @@ export default function ProductDetail() {
     <>
       <Header />
 
-      {/* 이미지 모달 */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
-        >
-          {/* 닫기 버튼 */}
-          <button
-            className="absolute top-4 right-4 text-white text-2xl"
-            onClick={() => setSelectedImage(null)}
-          >
-            ×
-          </button>
-
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80" onClick={() => setSelectedImage(null)}>
           {/* 왼쪽 화살표 */}
           {selectedIndex > 0 && (
             <button
-              className="absolute left-4 text-3xl text-gray-300"
-              onClick={() => {
-                const prev = selectedIndex - 1;
-                swiperRef.current?.slideTo(prev);
-                setSelectedImage(product.images[prev]);
-                setSelectedIndex(prev);
+              className="absolute left-4 text-3xl text-gray-300 z-50"
+              onClick={(e) => {
+                e.stopPropagation();
+                const newIndex = selectedIndex - 1;
+                setSelectedIndex(newIndex);
+                setSelectedImage(product.images[newIndex]);
+                swiperRef.current?.slideTo(newIndex); // ✅ Swiper 이동
               }}
             >
               ‹
             </button>
           )}
 
-          {/* 이미지 */}
+          {/* 확대 이미지 */}
           <img
             src={selectedImage}
             alt="확대 이미지"
-            className="max-w-full max-h-full rounded-xl transition-transform duration-300"
+            className="max-w-full max-h-full rounded-xl"
           />
 
           {/* 오른쪽 화살표 */}
           {selectedIndex < product.images.length - 1 && (
             <button
-              className="absolute right-4 text-3xl text-gray-300"
-              onClick={() => {
-                const next = selectedIndex + 1;
-                swiperRef.current?.slideTo(next);
-                setSelectedImage(product.images[next]);
-                setSelectedIndex(next);
+              className="absolute right-4 text-3xl text-gray-300 z-50"
+              onClick={(e) => {
+                e.stopPropagation();
+                const newIndex = selectedIndex + 1;
+                setSelectedIndex(newIndex);
+                setSelectedImage(product.images[newIndex]);
+                swiperRef.current?.slideTo(newIndex); // ✅ Swiper 이동
               }}
             >
               ›
@@ -90,19 +79,14 @@ export default function ProductDetail() {
         </div>
       )}
 
-
       <div className="px-4 py-4 space-y-4 max-w-md mx-auto">
-        {/* 제목 */}
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
           {product.name}
         </h1>
 
-        {/* 이미지 슬라이드 */}
         <Swiper
           spaceBetween={12}
           slidesPerView={1}
-          navigation={true} // ✅ 네비게이션 활성화
-          modules={[Navigation]} // ✅ 네비게이션 모듈 적용
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
         >
@@ -123,7 +107,6 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        {/* 썸네일 프리뷰 */}
         <div className="flex gap-2 pt-2 justify-center">
           {(product.images || []).map((src, idx) => (
             <img
@@ -141,7 +124,6 @@ export default function ProductDetail() {
           ))}
         </div>
 
-        {/* 버튼들 */}
         <div className="flex justify-between pt-4 flex-wrap gap-2">
           <button
             className="flex-1 min-w-[100px] max-w-[160px] bg-blue-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
