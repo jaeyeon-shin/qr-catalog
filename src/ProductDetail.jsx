@@ -9,19 +9,16 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 const productData = {
   a: {
     name: 'NC-UVA3 Max',
-    description: '이건 A3 Max 프린터에 대한 설명입니다.',
     images: ['/product-a-1.JPG', '/product-a-1.JPG', '/product-a-1.JPG'], // 수정된 부분
     pdf: '/catalog-a.pdf',
   },
   b: {
     name: '제품 B',
-    description: '이건 제품 B에 대한 설명입니다.',
     images: ['/product-b-1.jpg'],
     pdf: '/catalog-b.pdf',
   },
   c: {
     name: '제품 C',
-    description: '이건 제품 C에 대한 설명입니다.',
     images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
     pdf: '/catalog-c.pdf',
   },
@@ -58,11 +55,6 @@ export default function ProductDetail() {
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">
           {product.name}
         </h1>
-
-        {/* 설명 */}
-        <p className="text-gray-700 text-base leading-relaxed">
-          {product.description}
-        </p>
 
         {/* 이미지 슬라이드 */}
         <Swiper spaceBetween={12} slidesPerView={1}>
