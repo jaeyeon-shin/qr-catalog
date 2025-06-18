@@ -12,12 +12,12 @@ const productData = {
     pdf: '/catalog-a.pdf',
   },
   b: {
-    name: '제품 B',
+    name: 'test2',
     images: ['/product-b-1.jpg'],
     pdf: '/catalog-b.pdf',
   },
   c: {
-    name: '제품 C',
+    name: 'test3',
     images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
     pdf: '/catalog-c.pdf',
   },
