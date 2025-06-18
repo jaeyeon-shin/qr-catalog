@@ -186,10 +186,9 @@ export default function ProductDetail() {
         </div>
           {/* 회사 정보 */}
         <div className="pt-2 text-center text-sm text-gray-500 leading-snug">
-          (주)씨엠테크<br />
+          (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
           인천테크노벨리 U1센터 B동 209호, 210호<br />
-          대표전화: 032-361-2114
         </div>
 
       </div>
