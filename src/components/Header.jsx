@@ -1,8 +1,20 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  // 외부 클릭 시 메뉴 닫기
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <header className="flex justify-between items-center px-4 py-2 border-b relative">
@@ -19,11 +31,14 @@ export default function Header() {
 
       {/* 메뉴 */}
       {open && (
-        <div className="absolute top-16 right-4 bg-white border rounded shadow p-2 w-40 z-50">
+        <div
+          ref={menuRef}
+          className="absolute top-16 right-4 bg-white border rounded shadow p-2 w-52 z-50 text-sm"
+        >
           <Link to="/product/a" className="block py-2 px-3 hover:bg-gray-100">NC-UVA3 Max</Link>
           <Link to="/product/b" className="block py-2 px-3 hover:bg-gray-100">test2</Link>
           <Link to="/product/c" className="block py-2 px-3 hover:bg-gray-100">test3</Link>
-          {/* 필요 시 더 추가 */}
+
         </div>
       )}
     </header>
