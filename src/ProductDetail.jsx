@@ -73,7 +73,7 @@ export default function ProductDetail() {
                 <img
                   src={src}
                   alt={`${product.name} 이미지 ${idx + 1}`}
-                  className="w-full object-cover"
+                  className="w-full aspect-square object-cover rounded-2xl shadow-lg"
                   onClick={() => setSelectedImage(src)} // 확대 이미지 클릭용
                 />
               </div>
