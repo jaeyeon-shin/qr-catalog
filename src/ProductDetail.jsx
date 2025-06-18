@@ -9,7 +9,7 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 const productData = {
   a: {
     name: 'NC-UVA3 Max',
-    images: ['/product-a-1.JPG', '/product-a-1.JPG', '/product-a-1.JPG'], // 수정된 부분
+    images: ['/product-a-1.JPG', '/product-a-2.JPG', '/product-a-3.JPG'],
     pdf: '/catalog-a.pdf',
   },
   b: {
@@ -34,18 +34,18 @@ export default function ProductDetail() {
 
   return (
     <>
-      <Header /> {/* 상단 로고 + 햄버거 메뉴 */}
+      <Header />
 
-      {/* 이미지 모달 (Swiper 바깥, 컴포넌트 최상단에 위치) */}
+      {/* 이미지 모달 */}
       {selectedImage && (
         <div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80 transition-opacity duration-300 animate-fade"
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80 transition-opacity duration-300"
           onClick={() => setSelectedImage(null)}
         >
           <img
             src={selectedImage}
             alt="확대 이미지"
-            className="max-w-full max-h-full rounded-xl transition-transform duration-300 scale-100 hover:scale-105"
+            className="max-w-full max-h-full rounded-xl transition-transform duration-300 scale-100"
           />
         </div>
       )}
@@ -57,38 +57,40 @@ export default function ProductDetail() {
         </h1>
 
         {/* 이미지 슬라이드 */}
-        <Swiper spaceBetween={12} slidesPerView={1}>
+        <Swiper
+          spaceBetween={12}
+          slidesPerView={1}
+          onSwiper={(swiper) => (swiperRef.current = swiper)} // ✅ 슬라이더 참조 연결
+        >
           {(product.images || []).map((src, idx) => (
             <SwiperSlide key={idx}>
-              {/* ✅ 여기 전체를 대체 */}
               <div className="rounded-xl overflow-hidden shadow">
                 <img
                   src={src}
                   alt={`${product.name} 이미지 ${idx + 1}`}
                   className="w-full aspect-square object-cover rounded-2xl shadow-lg"
-                  onClick={() => setSelectedImage(src)} // 확대 이미지 클릭용
+                  onClick={() => setSelectedImage(src)}
                 />
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* ✅ 썸네일 프리뷰 */}
+        {/* 썸네일 프리뷰 */}
         <div className="flex gap-2 pt-2 justify-center">
           {(product.images || []).map((src, idx) => (
             <img
               key={idx}
               src={src}
               alt={`썸네일 ${idx + 1}`}
-              className="w-16 h-16 object-cover rounded cursor-pointer border hover:border-blue-500"
-              onClick={() => swiperRef.current?.slideTo(idx)}
+              className="w-16 h-16 object-cover rounded border cursor-pointer hover:border-blue-500"
+              onClick={() => swiperRef.current?.slideTo(idx)} // ✅ 썸네일 클릭 시 이동
             />
           ))}
         </div>
 
         {/* 버튼들 */}
         <div className="flex justify-between pt-4 flex-wrap gap-2">
-          {/* 상담하기 버튼 */}
           <button
             className="flex-1 min-w-[100px] max-w-[160px] bg-blue-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
             onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
@@ -97,7 +99,6 @@ export default function ProductDetail() {
             상담하기
           </button>
 
-          {/* 홈페이지 이동 */}
           <button
             className="flex-1 min-w-[100px] max-w-[160px] bg-slate-600 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
             onClick={() => window.open('https://nocai.co.kr/', '_blank')}
@@ -106,7 +107,6 @@ export default function ProductDetail() {
             홈페이지
           </button>
 
-          {/* PDF 다운로드 */}
           <a
             href={product.pdf}
             download
