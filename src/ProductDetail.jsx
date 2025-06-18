@@ -2,10 +2,11 @@ import { useParams } from 'react-router-dom';
 import Header from './components/Header';
 import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules'; // ✅ 추가
 import 'swiper/css';
-import { MdChat, MdHome, MdDownload } from 'react-icons/md'; 
+import 'swiper/css/navigation'; // ✅ 추가
+import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
-// 제품별 정보 정리
 const productData = {
   a: {
     name: 'NC-UVA3 Max',
@@ -39,14 +40,33 @@ export default function ProductDetail() {
 
       {/* 이미지 모달 */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80 transition-opacity duration-300"
-          onClick={() => setSelectedImage(null)}
-        >
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80">
+          {/* 왼쪽 클릭 영역 */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-1/2 z-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              const prev = (selectedIndex - 1 + product.images.length) % product.images.length;
+              setSelectedImage(product.images[prev]);
+              setSelectedIndex(prev);
+            }}
+          />
+          {/* 오른쪽 클릭 영역 */}
+          <div
+            className="absolute right-0 top-0 bottom-0 w-1/2 z-50"
+            onClick={(e) => {
+              e.stopPropagation();
+              const next = (selectedIndex + 1) % product.images.length;
+              setSelectedImage(product.images[next]);
+              setSelectedIndex(next);
+            }}
+          />
+          {/* 이미지 */}
           <img
             src={selectedImage}
             alt="확대 이미지"
-            className="max-w-full max-h-full rounded-xl transition-transform duration-300 scale-100"
+            className="max-w-full max-h-full rounded-xl z-10"
+            onClick={() => setSelectedImage(null)}
           />
         </div>
       )}
@@ -61,6 +81,8 @@ export default function ProductDetail() {
         <Swiper
           spaceBetween={12}
           slidesPerView={1}
+          navigation={true} // ✅ 네비게이션 활성화
+          modules={[Navigation]} // ✅ 네비게이션 모듈 적용
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
         >
