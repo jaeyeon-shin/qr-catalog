@@ -35,9 +35,15 @@ export default function Header() {
           ref={menuRef}
           className="absolute top-16 right-4 bg-white border rounded shadow p-2 w-52 z-50 text-sm"
         >
+          <Link to="/product/a" className="block py-2 px-3 hover:bg-gray-100">NC-UV9060 Visual</Link>
+          <Link to="/product/b" className="block py-2 px-3 hover:bg-gray-100">NC-UV0609 Max2</Link>
+          <Link to="/product/c" className="block py-2 px-3 hover:bg-gray-100">NC-UV0609 PE3S</Link>
           <Link to="/product/a" className="block py-2 px-3 hover:bg-gray-100">NC-UVA3 Max</Link>
-          <Link to="/product/b" className="block py-2 px-3 hover:bg-gray-100">test2</Link>
-          <Link to="/product/c" className="block py-2 px-3 hover:bg-gray-100">test3</Link>
+          <Link to="/product/b" className="block py-2 px-3 hover:bg-gray-100">NC-UVDTF30</Link>
+          <Link to="/product/c" className="block py-2 px-3 hover:bg-gray-100">NC-UVDTF60</Link>
+          <Link to="/product/a" className="block py-2 px-3 hover:bg-gray-100">DL-1010 Visual</Link>
+          <Link to="/product/b" className="block py-2 px-3 hover:bg-gray-100">DL-1810</Link>
+          <Link to="/product/c" className="block py-2 px-3 hover:bg-gray-100">DL-2513</Link>
 
         </div>
       )}
