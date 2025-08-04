@@ -6,18 +6,48 @@ import 'swiper/css';
 import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
 const productData = {
-  a: {
+  "9060_visual": {
+    name: 'NC-UV9060 Visual',
+    images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
+    pdf: '/catalog-a.pdf',
+  },
+  "0609_max2": {
+    name: 'NC-UV0609 Max2',
+    images: ['/product-b-1.jpg'],
+    pdf: '/catalog-b.pdf',
+  },
+  "0609_pe3s": {
+    name: 'NC-UV0609 PE3S',
+    images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
+    pdf: '/catalog-c.pdf',
+  },
+  "a3max": {
     name: 'NC-UVA3 Max',
     images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
     pdf: '/catalog-a.pdf',
   },
-  b: {
-    name: 'test2',
+  "dtf30": {
+    name: 'NC-UVDTF30',
     images: ['/product-b-1.jpg'],
     pdf: '/catalog-b.pdf',
   },
-  c: {
-    name: 'test3',
+  "dtf60": {
+    name: 'NC-UVDTF60',
+    images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
+    pdf: '/catalog-c.pdf',
+  },
+  "1010_visual": {
+    name: 'DL-1010 Visual',
+    images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
+    pdf: '/catalog-a.pdf',
+  },
+  "1810": {
+    name: 'DL-1810',
+    images: ['/product-b-1.jpg'],
+    pdf: '/catalog-b.pdf',
+  },
+  "2513": {
+    name: 'DL-2513',
     images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
     pdf: '/catalog-c.pdf',
   },
