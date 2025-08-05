@@ -35,16 +35,15 @@ export default function Header() {
           ref={menuRef}
           className="absolute top-16 right-4 bg-white border rounded shadow p-2 w-52 z-50 text-sm"
         >
-          <Link to="/product/9060_visual" className="block py-2 px-3 hover:bg-gray-100">NC-UV9060 Visual</Link>
-          <Link to="/product/0609_max2" className="block py-2 px-3 hover:bg-gray-100">NC-UV0609 Max2</Link>
-          <Link to="/product/0609_pe3s" className="block py-2 px-3 hover:bg-gray-100">NC-UV0609 PE3S</Link>
-          <Link to="/product/a3max" className="block py-2 px-3 hover:bg-gray-100">NC-UVA3 Max</Link>
-          <Link to="/product/dtf30" className="block py-2 px-3 hover:bg-gray-100">NC-UVDTF30</Link>
-          <Link to="/product/dtf60" className="block py-2 px-3 hover:bg-gray-100">NC-UVDTF60</Link>
-          <Link to="/product/1010_visual" className="block py-2 px-3 hover:bg-gray-100">DL-1010 Visual</Link>
-          <Link to="/product/1810" className="block py-2 px-3 hover:bg-gray-100">DL-1810</Link>
-          <Link to="/product/2513" className="block py-2 px-3 hover:bg-gray-100">DL-2513</Link>
-
+          <Link to="/product/9060_visual" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">NC-UV9060 Visual</Link>
+          <Link to="/product/0609_max2" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">NC-UV0609 Max2</Link>
+          <Link to="/product/0609_pe3s" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">NC-UV0609 PE3S</Link>
+          <Link to="/product/a3max" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">NC-UVA3 Max</Link>
+          <Link to="/product/dtf30" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">NC-UVDTF30</Link>
+          <Link to="/product/dtf60" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">NC-UVDTF60</Link>
+          <Link to="/product/1010_visual" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">DL-1010 Visual</Link>
+          <Link to="/product/1810" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">DL-1810</Link>
+          <Link to="/product/2513" onClick={() => setOpen(false)} className="block py-2 px-3 hover:bg-gray-100">DL-2513</Link>
         </div>
       )}
     </header>
