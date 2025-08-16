@@ -5,10 +5,21 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
+/**
+ * ✅ 이미지별 제목을 넣고 싶으면 imageInfos를 사용하세요.
+ *   - imageInfos: [{ src: '...', title: '전면 이미지' }, ...]
+ *   - imageInfos가 없으면 기존 images 배열을 사용하고 제목은 자동으로 "이미지 1, 2..."로 생성됩니다.
+ */
 const productData = {
   "9060_visual": {
     name: 'NC-UV9060 Visual',
-    images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
+    imageInfos: [
+      { src: '/product-a-1.webp', title: '전면 이미지' },
+      { src: '/product-a-2.JPG',  title: '측면 이미지' },
+      { src: '/product-a-3.JPG',  title: '상단 디테일' },
+      { src: '/product-a-4.JPG',  title: '컨트롤 패널' },
+      { src: '/product-a-5.JPG',  title: '출력 샘플' },
+    ],
     pdf: '/catalog-a.pdf',
   },
   "0609_max2": {
@@ -62,6 +73,12 @@ export default function ProductDetail() {
   const [loadedImages, setLoadedImages] = useState({});
   const swiperRef = useRef(null);
 
+  // 이미지/제목 소스 통합 (imageInfos 우선, 없으면 images로 대체)
+  const slides = (product?.imageInfos?.length
+    ? product.imageInfos
+    : (product?.images || []).map((src, i) => ({ src, title: `이미지 ${i + 1}` }))
+  );
+
   useEffect(() => {
     const timer = setTimeout(() => setShowSwipeHint(false), 3000);
     return () => clearTimeout(timer);
@@ -73,17 +90,25 @@ export default function ProductDetail() {
     <>
       <Header />
 
+      {/* 확대 보기 모달 */}
       {selectedImage && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80">
-          {/* X 닫기 버튼 */}
+        <div
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80"
+          onClick={() => setSelectedImage(null)}
+        >
+          {/* 닫기 */}
           <button
             className="absolute top-4 right-4 text-3xl text-gray-300 z-50"
-            onClick={() => setSelectedImage(null)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedImage(null);
+            }}
+            aria-label="닫기"
           >
             ×
           </button>
 
-          {/* 왼쪽 화살표 */}
+          {/* 이전 */}
           {selectedIndex > 0 && (
             <button
               className="absolute left-4 text-4xl text-gray-300 z-50"
@@ -91,32 +116,35 @@ export default function ProductDetail() {
                 e.stopPropagation();
                 const newIndex = selectedIndex - 1;
                 setSelectedIndex(newIndex);
-                setSelectedImage(product.images[newIndex]);
+                setSelectedImage(slides[newIndex].src);
                 swiperRef.current?.slideTo(newIndex);
               }}
+              aria-label="이전 이미지"
             >
               ‹
             </button>
           )}
 
-          {/* 확대 이미지 */}
+          {/* 이미지 */}
           <img
             src={selectedImage}
             alt="확대 이미지"
             className="max-w-full max-h-full rounded-xl"
+            onClick={(e) => e.stopPropagation()}
           />
 
-          {/* 오른쪽 화살표 */}
-          {selectedIndex < product.images.length - 1 && (
+          {/* 다음 */}
+          {selectedIndex < slides.length - 1 && (
             <button
               className="absolute right-4 text-4xl text-gray-300 z-50"
               onClick={(e) => {
                 e.stopPropagation();
                 const newIndex = selectedIndex + 1;
                 setSelectedIndex(newIndex);
-                setSelectedImage(product.images[newIndex]);
+                setSelectedImage(slides[newIndex].src);
                 swiperRef.current?.slideTo(newIndex);
               }}
+              aria-label="다음 이미지"
             >
               ›
             </button>
@@ -129,6 +157,34 @@ export default function ProductDetail() {
           {product.name}
         </h1>
 
+        {/* ✅ 이미지 소제목 탭 (슬라이드 위) */}
+        <div className="w-full overflow-x-auto">
+          <div className="flex items-center gap-2 pb-1">
+            {slides.map((s, idx) => {
+              const active = idx === selectedIndex;
+              return (
+                <button
+                  key={`tab-${idx}-${s.src}`}
+                  onClick={() => {
+                    swiperRef.current?.slideTo(idx);
+                    setSelectedIndex(idx);
+                  }}
+                  className={
+                    (active
+                      ? "bg-blue-600 text-white border-blue-600 "
+                      : "bg-white text-gray-700 border-gray-300 hover:border-blue-400 ") +
+                    "whitespace-nowrap rounded-full border px-3 py-1 text-sm transition"
+                  }
+                  aria-current={active ? "true" : "false"}
+                >
+                  {s.title}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 메인 이미지: 정방형(aspect-ratio 1/1) */}
         <Swiper
           spaceBetween={12}
           slidesPerView={1}
@@ -136,18 +192,19 @@ export default function ProductDetail() {
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
         >
-          {(product.images || []).map((src, idx) => (
-            <SwiperSlide key={idx}>
+          {slides.map((s, idx) => (
+            <SwiperSlide key={`slide-${idx}-${s.src}`}>
               <div className="relative rounded-xl overflow-hidden shadow">
                 <img
-                  src={src}
-                  alt={`${product.name} 이미지 ${idx + 1}`}
-                  className={`w-full aspect-[4/3] object-cover rounded-2xl shadow-lg transition-opacity duration-700 ${
-                    loadedImages[idx] ? 'opacity-100' : 'opacity-0'
-                  }`}
+                  src={s.src}
+                  alt={`${product.name} - ${s.title}`}
+                  className={
+                    (loadedImages[idx] ? "opacity-100 " : "opacity-0 ") +
+                    "w-full aspect-[1/1] object-cover rounded-2xl shadow-lg transition-opacity duration-700"
+                  }
                   onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
                   onClick={() => {
-                    setSelectedImage(src);
+                    setSelectedImage(s.src);
                     setSelectedIndex(idx);
                   }}
                 />
@@ -161,23 +218,9 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        <div className="flex gap-2 pt-2 justify-center">
-          {(product.images || []).map((src, idx) => (
-            <img
-              key={idx}
-              src={src}
-              alt={`썸네일 ${idx + 1}`}
-              className={`w-16 h-16 object-cover rounded border cursor-pointer transition ${
-                selectedIndex === idx ? 'border-blue-500' : 'border-gray-300'
-              }`}
-              onClick={() => {
-                swiperRef.current?.slideTo(idx);
-                setSelectedIndex(idx);
-              }}
-            />
-          ))}
-        </div>
+        {/* ⛔️ 썸네일(미리보기) 및 탭 아래 보조 텍스트 제거됨 */}
 
+        {/* CTA 버튼 */}
         <div className="flex justify-between pt-2 flex-wrap gap-2">
           <button
             className="flex-1 min-w-[100px] max-w-[160px] bg-blue-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
@@ -214,13 +257,13 @@ export default function ProductDetail() {
             </button>
           )}
         </div>
-          {/* 회사 정보 */}
+
+        {/* 회사 정보 */}
         <div className="pt-2 text-center text-sm text-gray-500 leading-snug">
           (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
           인천테크노벨리 U1센터 B동 209호, 210호<br />
         </div>
-
       </div>
     </>
   );
