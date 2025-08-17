@@ -7,22 +7,20 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
 /**
  * 전 제품 공통: 4개 탭(전면/측면/스펙/특장점)
- * - imageInfos에 "전면/측면/스펙/특장점" 제목이 있으면 우선 매칭
- * - 없으면 images[0..3]을 순서대로 매칭
- * - 스펙(specs) = [{ label, value }], 특장점(features) = [string]
- * - 데이터 없으면 "자료 준비중" 표시
+ * - 전면/측면: 정방형 이미지(카드 테두리/섀도우 적용)
+ * - 스펙: 표, 특장점: 리스트 (이미지 무시)
+ * - 네 탭 모두 동일한 정방형 카드 높이 유지 (내부 스크롤)
  */
 const productData = {
   "9060_visual": {
     name: 'NC-UV9060 Visual',
     imageInfos: [
-      { src: '/product-a-1.webp', title: '전면' },
-      { src: '/product-a-2.JPG',  title: '측면' },
-      { src: '/product-a-3.JPG',  title: '스펙' },     // 있으면 사용, 없으면 표로 대체
-      { src: '/product-a-4.JPG',  title: '특장점' },   // 있으면 사용, 없으면 리스트로 대체
-      { src: '/product-a-5.JPG',  title: '추가' },
+      { src: '/9060_front.webp', title: '전면' },
+      { src: '/9060_side.webp',  title: '측면' },
+      { src: '/product-a-3.JPG', title: '스펙' },      // 있어도 사용하지 않음
+      { src: '/product-a-4.JPG', title: '특장점' },    // 있어도 사용하지 않음
     ],
-    pdf: '/catalog-a.pdf',
+    pdf: '/9060visual_catalog.pdf',
     specs: [
       { label: '인쇄 영역', value: '900 x 600 mm' },
       { label: '최대 두께', value: '100 mm' },
@@ -43,7 +41,7 @@ const productData = {
   "0609_max2": {
     name: 'NC-UV0609 Max2',
     images: ['/product-b-1.jpg'],
-    pdf: '/catalog-b.pdf',
+    pdf: '/max2_catalog.pdf',
     specs: [
       { label: '인쇄 영역', value: '600 x 900 mm' },
       { label: '잉크 타입', value: 'UV LED' },
@@ -56,7 +54,7 @@ const productData = {
   "0609_pe3s": {
     name: 'NC-UV0609 PE3S',
     images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
-    pdf: '/catalog-c.pdf',
+    pdf: '/pe3s_catalog.pdf',
     specs: [
       { label: '인쇄 영역', value: '600 x 900 mm' },
       { label: '헤드 구성', value: 'EPSON i1600-U1 (x3)' },
@@ -68,43 +66,43 @@ const productData = {
   },
   "a3max": {
     name: 'NC-UVA3 Max',
-    images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
-    pdf: '/catalog-a.pdf',
+    images: ['/a3max_front.webp', '/a3max_side.webp', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
+    pdf: '/a3max_catalog.pdf',
     specs: [],
     features: [],
   },
   "dtf30": {
     name: 'NC-UVDTF30',
     images: ['/product-b-1.jpg'],
-    pdf: '/catalog-b.pdf',
+    pdf: '/dtf30_catalog.pdf',
     specs: [],
     features: [],
   },
   "dtf60": {
     name: 'NC-UVDTF60',
     images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
-    pdf: '/catalog-c.pdf',
+    pdf: '/dtf60_catalog.pdf',
     specs: [],
     features: [],
   },
   "1010_visual": {
     name: 'DL-1010 Visual',
     images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
-    pdf: '/catalog-a.pdf',
+    pdf: '/1010visual_catalog.pdf',
     specs: [],
     features: [],
   },
   "1810": {
     name: 'DL-1810',
     images: ['/product-b-1.jpg'],
-    pdf: '/catalog-b.pdf',
+    pdf: '/1810_catalog.pdf',
     specs: [],
     features: [],
   },
   "2513": {
     name: 'DL-2513',
     images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
-    pdf: '/catalog-c.pdf',
+    pdf: '/2513_catalog.pdf',
     specs: [],
     features: [],
   },
@@ -119,26 +117,25 @@ export default function ProductDetail() {
   const [loadedImages, setLoadedImages] = useState({});
   const swiperRef = useRef(null);
 
-  // 4개 탭 제목
   const tabTitles = ['전면', '측면', '스펙', '특장점'];
 
-  // 제품별 원본 이미지 소스 (imageInfos 우선)
-  const baseItems = product?.imageInfos?.length
+  // 제품별 원본 이미지 소스 (imageInfos 우선) — 스펙/특장점 제목은 제외
+  const baseItemsRaw = product?.imageInfos?.length
     ? product.imageInfos.map((x) => ({ src: x.src, title: x.title || '' }))
     : (product?.images || []).map((src) => ({ src, title: '' }));
+  const baseItems = baseItemsRaw.filter((it) => !/(스펙|특장점)/.test(it.title || ''));
 
-  const findByKeyword = (kw) =>
-    baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
+  const findByKeyword = (kw) => baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
 
-  // 각 탭 콘텐츠 정의: 전면/측면 = image, 스펙 = specs, 특장점 = features
+  // 탭 구성: 전면/측면은 이미지, 스펙/특장점은 텍스트(이미지 무시)
   const tabs = [
-    { title: '전면', type: 'image',    src: findByKeyword('전면')   || baseItems[0]?.src || null },
-    { title: '측면', type: 'image',    src: findByKeyword('측면')   || baseItems[1]?.src || null },
-    { title: '스펙', type: 'specs',    specs: product?.specs || [] },
+    { title: '전면',   type: 'image',    src: findByKeyword('전면') || baseItems[0]?.src || null },
+    { title: '측면',   type: 'image',    src: findByKeyword('측면') || baseItems[1]?.src || null },
+    { title: '스펙',   type: 'specs',    specs: product?.specs || [] },
     { title: '특장점', type: 'features', features: product?.features || [] },
   ];
 
-  // 항상 첫 탭('전면')에서 시작: 제품(id) 바뀔 때 초기화
+  // 항상 첫 탭('전면')에서 시작
   useEffect(() => {
     setSelectedIndex(0);
     setSelectedImage(null);
@@ -146,11 +143,10 @@ export default function ProductDetail() {
     setLoadedImages({});
     if (swiperRef.current?.slideTo) {
       swiperRef.current.slideTo(0, 0);
-      if (swiperRef.current.updateAutoHeight) swiperRef.current.updateAutoHeight();
     }
   }, [id]);
 
-  // 최초 힌트 3초 노출
+  // 힌트 3초 노출
   useEffect(() => {
     const timer = setTimeout(() => setShowSwipeHint(false), 3000);
     return () => clearTimeout(timer);
@@ -161,23 +157,25 @@ export default function ProductDetail() {
   const renderSpecs = (rows) => {
     if (!rows || rows.length === 0) {
       return (
-        <div className="w-full rounded-2xl bg-gray-50 border border-dashed border-gray-300 flex items-center justify-center text-gray-500 h-64">
+        <div className="w-full h-full flex items-center justify-center text-gray-500">
           스펙 자료 준비중
         </div>
       );
     }
     return (
-      <div className="w-full rounded-2xl bg-white shadow border overflow-hidden">
-        <table className="w-full text-sm">
-          <tbody>
-            {rows.map((r, i) => (
-              <tr key={`spec-${i}`} className="even:bg-gray-50">
-                <th className="w-36 px-4 py-3 text-left font-semibold text-gray-700 align-top border-r">{r.label}</th>
-                <td className="px-4 py-3 text-gray-800">{r.value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="w-full h-full">
+        <div className="h-full overflow-auto">
+          <table className="w-full text-sm">
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={`spec-${i}`} className="even:bg-gray-50">
+                  <th className="w-36 px-4 py-3 text-left font-semibold text-gray-700 align-top border-r">{r.label}</th>
+                  <td className="px-4 py-3 text-gray-800">{r.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };
@@ -185,18 +183,20 @@ export default function ProductDetail() {
   const renderFeatures = (items) => {
     if (!items || items.length === 0) {
       return (
-        <div className="w-full rounded-2xl bg-gray-50 border border-dashed border-gray-300 flex items-center justify-center text-gray-500 h-64">
+        <div className="w-full h-full flex items-center justify-center text-gray-500">
           특장점 자료 준비중
         </div>
       );
     }
     return (
-      <div className="w-full rounded-2xl bg-white shadow border p-4">
-        <ul className="list-disc pl-5 space-y-2 text-gray-800 text-sm">
-          {items.map((t, i) => (
-            <li key={`feat-${i}`}>{t}</li>
-          ))}
-        </ul>
+      <div className="w-full h-full">
+        <div className="h-full overflow-auto p-4">
+          <ul className="list-disc pl-5 space-y-2 text-gray-800 text-sm">
+            {items.map((t, i) => (
+              <li key={`feat-${i}`}>{t}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     );
   };
@@ -289,46 +289,46 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 메인 컨텐츠: 이미지 탭은 정방형, 그 외는 카드 레이아웃 (autoHeight 활성화) */}
+        {/* 메인 컨텐츠: 모든 탭을 동일한 '정방형 카드'로 고정 */}
         <Swiper
-          key={id}               // 제품 변경 시 초기화
-          initialSlide={0}       // 항상 첫 슬라이드
+          key={id}
+          initialSlide={0}
           spaceBetween={12}
           slidesPerView={1}
-          autoHeight={true}
+          autoHeight={true}  // 모든 슬라이드가 같은 높이(정방형)이므로 변화 없음
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
         >
           {tabs.map((tb, idx) => (
             <SwiperSlide key={`slide-${idx}`}>
-              <div className="relative rounded-xl overflow-hidden">
-                {tb.type === 'image' ? (
-                  tb.src ? (
-                    <img
-                      src={tb.src}
-                      alt={`${product.name} - ${tb.title}`}
-                      className={
-                        (loadedImages[idx] ? "opacity-100 " : "opacity-0 ") +
-                        "w-full aspect-[1/1] object-cover rounded-2xl shadow-lg transition-opacity duration-700"
-                      }
-                      onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
-                      onClick={() => { setSelectedImage(tb.src); setSelectedIndex(idx); }}
-                    />
+              {/* 공통 카드 래퍼: 흰 배경 + 테두리 + 섀도우 + 정방형 */}
+              <div className="w-full rounded-2xl bg-white shadow border overflow-hidden relative">
+                <div className="aspect-[1/1]">
+                  {tb.type === 'image' ? (
+                    tb.src ? (
+                      <img
+                        src={tb.src}
+                        alt={`${product.name} - ${tb.title}`}
+                        className={
+                          (loadedImages[idx] ? "opacity-100 " : "opacity-0 ") +
+                          "w-full h-full object-cover transition-opacity duration-700"
+                        }
+                        onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
+                        onClick={() => { setSelectedImage(tb.src); setSelectedIndex(idx); }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-500">
+                        {tb.title} 자료 준비중
+                      </div>
+                    )
+                  ) : tb.type === 'specs' ? (
+                    <div className="w-full h-full">{renderSpecs(tb.specs)}</div>
                   ) : (
-                    <div className="w-full aspect-[1/1] rounded-2xl bg-gray-50 border border-dashed border-gray-300 flex items-center justify-center text-gray-500">
-                      {tb.title} 자료 준비중
-                    </div>
-                  )
-                ) : tb.type === 'specs' ? (
-                  <div className="py-1">
-                    {renderSpecs(tb.specs)}
-                  </div>
-                ) : (
-                  <div className="py-1">
-                    {renderFeatures(tb.features)}
-                  </div>
-                )}
+                    <div className="w-full h-full">{renderFeatures(tb.features)}</div>
+                  )}
+                </div>
 
+                {/* 처음 진입 힌트 (이미지일 때만) */}
                 {idx === 0 && showSwipeHint && tb.type === 'image' && tb.src && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-sm font-medium z-10">
                     이미지를 좌우로 넘겨보세요 →
@@ -339,7 +339,7 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        {/* CTA 버튼 */}
+        {/* CTA 버튼 (기존 구성 유지) */}
         <div className="flex justify-between pt-2 flex-wrap gap-2">
           <button
             className="flex-1 min-w-[100px] max-w-[160px] bg-blue-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
