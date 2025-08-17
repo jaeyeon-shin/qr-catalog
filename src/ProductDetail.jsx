@@ -7,10 +7,10 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
 /**
  * 전 제품 공통: 4개 탭(전면/측면/스펙/특장점)
- * - 제목/탭/카드/CTA 모두 같은 좌우 여백(폭)으로 정렬
- * - 전면/측면: 정방형 이미지 카드
- * - 스펙: 표(가독성 강화), 특장점: 리스트
- * - 모든 카드 높이 동일(정방형), 내부 스크롤
+ * - 전면/측면: 정방형 이미지(카드 테두리/섀도우 적용)
+ * - 스펙: 표, 특장점: 리스트 (이미지 무시)
+ * - 네 탭 모두 동일한 정방형 카드(최대 320px)로 축소 표시
+ * - 제목/탭/이미지/CTA 모두 같은 좌우 여백(같은 폭)으로 정렬
  */
 const productData = {
   "9060_visual": {
@@ -18,6 +18,8 @@ const productData = {
     imageInfos: [
       { src: '/9060_front.webp', title: '전면' },
       { src: '/9060_side.webp',  title: '측면' },
+      { src: '/product-a-3.JPG', title: '스펙' },      // 있어도 사용하지 않음
+      { src: '/product-a-4.JPG', title: '특장점' },    // 있어도 사용하지 않음
     ],
     pdf: '/9060visual_catalog.pdf',
     specs: [
@@ -65,7 +67,7 @@ const productData = {
   },
   "a3max": {
     name: 'NC-UVA3 Max',
-    images: ['/a3max_front.webp', '/a3max_side.webp'],
+    images: ['/a3max_front.webp', '/a3max_side.webp', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
     pdf: '/a3max_catalog.pdf',
     specs: [],
     features: [],
@@ -86,7 +88,7 @@ const productData = {
   },
   "1010_visual": {
     name: 'DL-1010 Visual',
-    images: ['/product-a-1.webp', '/product-a-2.JPG'],
+    images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
     pdf: '/1010visual_catalog.pdf',
     specs: [],
     features: [],
@@ -116,19 +118,18 @@ export default function ProductDetail() {
   const [loadedImages, setLoadedImages] = useState({});
   const swiperRef = useRef(null);
 
-  // ✅ 공통 내부 폭(여백 체계 통일): 제목/탭/카드/CTA 모두 동일
-  const INNER = "mx-auto w-[85%] max-w-[320px]";
+  // ✅ 공통 내부 폭: 동일 좌우 여백 맞추기 (이미지 카드/제목/탭/CTA 모두 동일)
+  const INNER = "mx-auto w-[85%] max-w-[320px]"; // 필요 시 85%/320px 조절
 
   const tabTitles = ['전면', '측면', '스펙', '특장점'];
 
-  // 제품 이미지 소스 (imageInfos 우선, 스펙/특장점 제목 제외)
+  // 제품별 원본 이미지 소스 (imageInfos 우선) — 스펙/특장점 제목은 제외
   const baseItemsRaw = product?.imageInfos?.length
     ? product.imageInfos.map((x) => ({ src: x.src, title: x.title || '' }))
     : (product?.images || []).map((src) => ({ src, title: '' }));
   const baseItems = baseItemsRaw.filter((it) => !/(스펙|특장점)/.test(it.title || ''));
 
-  const findByKeyword = (kw) =>
-    baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
+  const findByKeyword = (kw) => baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
 
   const tabs = [
     { title: '전면',   type: 'image',    src: findByKeyword('전면') || baseItems[0]?.src || null },
@@ -148,7 +149,6 @@ export default function ProductDetail() {
     }
   }, [id]);
 
-  // 힌트 3초 노출
   useEffect(() => {
     const timer = setTimeout(() => setShowSwipeHint(false), 3000);
     return () => clearTimeout(timer);
@@ -156,7 +156,6 @@ export default function ProductDetail() {
 
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
 
-  // 스펙/특장점 가독성 렌더
   const renderSpecs = (rows) => {
     if (!rows || rows.length === 0) {
       return <div className="w-full h-full flex items-center justify-center text-gray-500">스펙 자료 준비중</div>;
@@ -167,11 +166,9 @@ export default function ProductDetail() {
           <table className="w-full text-[13px]">
             <tbody>
               {rows.map((r, i) => (
-                <tr key={`spec-${i}`} className="border-b last:border-b-0 border-gray-100">
-                  <th className="w-32 px-3 py-2.5 text-left font-semibold text-gray-600 align-top bg-gray-50">
-                    {r.label}
-                  </th>
-                  <td className="px-3 py-2.5 text-gray-900 break-words">{r.value}</td>
+                <tr key={`spec-${i}`} className="even:bg-gray-50">
+                  <th className="w-32 px-3 py-2 text-left font-semibold text-gray-700 align-top border-r">{r.label}</th>
+                  <td className="px-3 py-2 text-gray-800">{r.value}</td>
                 </tr>
               ))}
             </tbody>
@@ -188,12 +185,9 @@ export default function ProductDetail() {
     return (
       <div className="w-full h-full">
         <div className="h-full overflow-auto p-3">
-          <ul className="space-y-2 text-gray-900 text-[13px]">
+          <ul className="list-disc pl-5 space-y-1.5 text-gray-800 text-[13px]">
             {items.map((t, i) => (
-              <li key={`feat-${i}`} className="pl-4 relative">
-                <span className="absolute left-0 top-2 block h-1.5 w-1.5 rounded-full bg-blue-500" />
-                {t}
-              </li>
+              <li key={`feat-${i}`}>{t}</li>
             ))}
           </ul>
         </div>
@@ -205,39 +199,25 @@ export default function ProductDetail() {
     <>
       <Header />
 
-      {/* 이미지 확대 모달 */}
+      {/* 확대 모달 */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80"
-          onClick={() => setSelectedImage(null)}
-        >
-          <button
-            className="absolute top-4 right-4 text-3xl text-gray-300 z-50"
-            onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-            aria-label="닫기"
-          >
-            ×
-          </button>
-          <img
-            src={selectedImage}
-            alt="확대 이미지"
-            className="max-w-full max-h-full rounded-xl"
-            onClick={(e) => e.stopPropagation()}
-          />
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80" onClick={() => setSelectedImage(null)}>
+          <button className="absolute top-4 right-4 text-3xl text-gray-300 z-50" onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }} aria-label="닫기">×</button>
+          <img src={selectedImage} alt="확대 이미지" className="max-w-full max-h-full rounded-xl" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
 
-      {/* 페이지 컨테이너: 여백 체계 통일 + 하단 여백 축소 */}
-      <div className="px-3 py-3 space-y-3 max-w-md mx-auto pb-16">
-        {/* 제목 */}
+      {/* 바깥 컨테이너(페이지 폭) */}
+      <div className="px-3 py-3 space-y-3 max-w-md mx-auto pb-24">
+        {/* ✅ 제목: 공통 폭 적용 */}
         <div className={INNER}>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
         </div>
 
-        {/* 탭(헤더 바로 아래에서 쓰기 좋게) */}
+        {/* ✅ 탭: 공통 폭 적용 */}
         <div className={INNER}>
           <div className="grid grid-cols-4 gap-2">
-            {['전면', '측면', '스펙', '특장점'].map((title, idx) => {
+            {tabTitles.map((title, idx) => {
               const active = idx === selectedIndex;
               return (
                 <button
@@ -258,7 +238,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 메인 컨텐츠: 통일 폭 + 정방형 카드 */}
+        {/* ✅ 메인 컨텐츠: 이미지/스펙/특장점 모두 같은 폭 + 정방형 카드 */}
         <Swiper
           key={id}
           initialSlide={0}
@@ -305,20 +285,20 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        {/* 하단 CTA: 상하 여백/버튼 높이 축소 */}
+        {/* ✅ CTA 버튼: 공통 폭 적용 */}
         <div className={INNER}>
           <div className="flex justify-between gap-2">
             <button
-              className="flex-1 h-10 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
-              onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank', 'noopener')}
+              className="flex-1 h-11 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
+              onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
             >
               <MdChat className="text-base" />
               상담하기
             </button>
 
             <button
-              className="flex-1 h-10 bg-slate-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
-              onClick={() => window.open('https://nocai.co.kr/', '_blank', 'noopener')}
+              className="flex-1 h-11 bg-slate-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
+              onClick={() => window.open('https://nocai.co.kr/', '_blank')}
             >
               <MdHome className="text-base" />
               홈페이지
@@ -328,7 +308,7 @@ export default function ProductDetail() {
               <a
                 href={product.pdf}
                 download
-                className="flex-1 h-10 bg-green-500 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
+                className="flex-1 h-11 bg-green-500 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
               >
                 <MdDownload className="text-base" />
                 상세정보
@@ -336,7 +316,7 @@ export default function ProductDetail() {
             ) : (
               <button
                 disabled
-                className="flex-1 h-10 bg-gray-300 text-white rounded-lg shadow-sm cursor-not-allowed flex items-center justify-center gap-1.5 text-sm"
+                className="flex-1 h-11 bg-gray-300 text-white rounded-lg shadow-sm cursor-not-allowed flex items-center justify-center gap-1.5 text-sm"
               >
                 <MdDownload className="text-base" />
                 상세정보 없음
@@ -345,7 +325,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 회사 정보 */}
+        {/* 회사 정보 (페이지 폭 그대로) */}
         <div className="pt-1 text-center text-xs text-gray-500 leading-snug">
           (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
