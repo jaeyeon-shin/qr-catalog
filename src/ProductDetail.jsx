@@ -10,6 +10,7 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
  * - 전면/측면: 정방형 이미지(카드 테두리/섀도우 적용)
  * - 스펙: 표, 특장점: 리스트 (이미지 무시)
  * - 네 탭 모두 동일한 정방형 카드(최대 320px)로 축소 표시
+ * - 제목/탭/이미지/CTA 모두 같은 좌우 여백(같은 폭)으로 정렬
  */
 const productData = {
   "9060_visual": {
@@ -117,6 +118,9 @@ export default function ProductDetail() {
   const [loadedImages, setLoadedImages] = useState({});
   const swiperRef = useRef(null);
 
+  // ✅ 공통 내부 폭: 동일 좌우 여백 맞추기 (이미지 카드/제목/탭/CTA 모두 동일)
+  const INNER = "mx-auto w-[85%] max-w-[320px]"; // 필요 시 85%/320px 조절
+
   const tabTitles = ['전면', '측면', '스펙', '특장점'];
 
   // 제품별 원본 이미지 소스 (imageInfos 우선) — 스펙/특장점 제목은 제외
@@ -203,12 +207,15 @@ export default function ProductDetail() {
         </div>
       )}
 
+      {/* 바깥 컨테이너(페이지 폭) */}
       <div className="px-3 py-3 space-y-3 max-w-md mx-auto pb-24">
-        {/* 제목 축소 */}
-        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
+        {/* ✅ 제목: 공통 폭 적용 */}
+        <div className={INNER}>
+          <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
+        </div>
 
-        {/* 탭 컴팩트 */}
-        <div className="w-full">
+        {/* ✅ 탭: 공통 폭 적용 */}
+        <div className={INNER}>
           <div className="grid grid-cols-4 gap-2">
             {tabTitles.map((title, idx) => {
               const active = idx === selectedIndex;
@@ -231,7 +238,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 메인 컨텐츠: 모든 탭을 동일한 '정방형 카드(최대 320px)'로 */}
+        {/* ✅ 메인 컨텐츠: 이미지/스펙/특장점 모두 같은 폭 + 정방형 카드 */}
         <Swiper
           key={id}
           initialSlide={0}
@@ -243,9 +250,8 @@ export default function ProductDetail() {
         >
           {tabs.map((tb, idx) => (
             <SwiperSlide key={`slide-${idx}`}>
-              {/* 카드: 폭 85% / 최대 320px, 정방형 */}
-              <div className="w-full flex justify-center">
-                <div className="w-[85%] max-w-[320px] rounded-2xl bg-white shadow border overflow-hidden relative">
+              <div className={INNER}>
+                <div className="rounded-2xl bg-white shadow border overflow-hidden relative">
                   <div className="aspect-square">
                     {tb.type === 'image' ? (
                       tb.src ? (
@@ -279,45 +285,47 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        {/* 하단 CTA(컴팩트) */}
-        <div className="flex justify-between pt-2 gap-2">
-          <button
-            className="flex-1 h-11 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
-            onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
-          >
-            <MdChat className="text-base" />
-            상담하기
-          </button>
-
-          <button
-            className="flex-1 h-11 bg-slate-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
-            onClick={() => window.open('https://nocai.co.kr/', '_blank')}
-          >
-            <MdHome className="text-base" />
-            홈페이지
-          </button>
-
-          {product.pdf ? (
-            <a
-              href={product.pdf}
-              download
-              className="flex-1 h-11 bg-green-500 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
-            >
-              <MdDownload className="text-base" />
-              상세정보
-            </a>
-          ) : (
+        {/* ✅ CTA 버튼: 공통 폭 적용 */}
+        <div className={INNER}>
+          <div className="flex justify-between gap-2">
             <button
-              disabled
-              className="flex-1 h-11 bg-gray-300 text-white rounded-lg shadow-sm cursor-not-allowed flex items-center justify-center gap-1.5 text-sm"
+              className="flex-1 h-11 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
+              onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
             >
-              <MdDownload className="text-base" />
-              상세정보 없음
+              <MdChat className="text-base" />
+              상담하기
             </button>
-          )}
+
+            <button
+              className="flex-1 h-11 bg-slate-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
+              onClick={() => window.open('https://nocai.co.kr/', '_blank')}
+            >
+              <MdHome className="text-base" />
+              홈페이지
+            </button>
+
+            {product.pdf ? (
+              <a
+                href={product.pdf}
+                download
+                className="flex-1 h-11 bg-green-500 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
+              >
+                <MdDownload className="text-base" />
+                상세정보
+              </a>
+            ) : (
+              <button
+                disabled
+                className="flex-1 h-11 bg-gray-300 text-white rounded-lg shadow-sm cursor-not-allowed flex items-center justify-center gap-1.5 text-sm"
+              >
+                <MdDownload className="text-base" />
+                상세정보 없음
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* 회사 정보 (간격 축소) */}
+        {/* 회사 정보 (페이지 폭 그대로) */}
         <div className="pt-1 text-center text-xs text-gray-500 leading-snug">
           (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
