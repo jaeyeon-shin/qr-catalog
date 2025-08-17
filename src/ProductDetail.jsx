@@ -16,21 +16,21 @@ const productData = {
   "9060_visual": {
     name: 'NC-UV9060 Visual',
     imageInfos: [
-      { src: '/9060_front.webp', title: '전면' },
-      { src: '/9060_side.webp',  title: '측면' },
+      { src: '/9060visual_front.webp', title: '전면' },
+      { src: '/9060visual_side.webp',  title: '측면' },
       { src: '/product-a-3.JPG', title: '스펙' },      // 있어도 사용하지 않음
       { src: '/product-a-4.JPG', title: '특장점' },    // 있어도 사용하지 않음
     ],
     pdf: '/9060visual_catalog.pdf',
     specs: [
-      { label: '인쇄 영역', value: '900 x 600 mm' },
-      { label: '최대 두께', value: '100 mm' },
-      { label: '잉크 타입', value: 'UV LED' },
-      { label: '컬러 구성', value: 'CMYK + White + Varnish' },
-      { label: '헤드 구성', value: 'EPSON i3200-U1 (x2)' },
-      { label: '해상도', value: '최대 1440 dpi' },
-      { label: '인터페이스', value: 'USB 3.0 / Ethernet' },
-      { label: '전원', value: 'AC 220V, 50/60Hz' },
+      { label: '헤드', value: 'EPSON i3200-U1HD' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력(+Primer 출력 가능)' },
+      { label: '인쇄 면적', value: '900 x 600mm' },
+      { label: '인쇄 높이', value: '180mm' },
+      { label: '출력 컬러', value: 'CMYKLcLmLkLlk + W + V(+P)' },
+      { label: '장비 크기', value: '250kg' },
+      { label: '소프트웨어', value: 'FleiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
     ],
     features: [
       '화이트/바니시 동시 출력로 생산성 향상',
