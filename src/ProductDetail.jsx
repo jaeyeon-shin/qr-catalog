@@ -28,8 +28,8 @@ const productData = {
       { label: '인쇄 면적', value: '900 x 600mm' },
       { label: '인쇄 높이', value: '180mm' },
       { label: '출력 컬러', value: 'CMYKLcLmLkLlk + W + V(+P)' },
-      { label: '장비 크기', value: '250kg' },
-      { label: '소프트웨어', value: 'FleiPRINT' },
+      { label: '장비 크기 및 무게', value: '1998 x 1298 x 787mm | 250kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
       { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
     ],
     features: [
@@ -44,8 +44,14 @@ const productData = {
     images: ['/max2_front.webp', '/max2_side.webp'],
     pdf: '/max2_catalog.pdf',
     specs: [
-      { label: '인쇄 영역', value: '600 x 900 mm' },
-      { label: '잉크 타입', value: 'UV LED' },
+      { label: '헤드', value: 'EPSON i3200-U1HD' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 면적', value: '600 x 900mm' },
+      { label: '인쇄 높이', value: '180mm' },
+      { label: '출력 컬러', value: 'CMYKLcLmLkLlk + W + V(+P)' },
+      { label: '장비 크기', value: '226kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
     ],
     features: [
       '컴팩트한 바디에 고출력',
