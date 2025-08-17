@@ -9,7 +9,7 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
  * 전 제품 공통: 4개 탭(전면/측면/스펙/특장점)
  * - 전면/측면: 정방형 이미지(카드 테두리/섀도우 적용)
  * - 스펙: 표, 특장점: 리스트 (이미지 무시)
- * - 네 탭 모두 동일한 정방형 카드 높이 유지 (내부 스크롤)
+ * - 네 탭 모두 동일한 정방형 카드(최대 320px)로 축소 표시
  */
 const productData = {
   "9060_visual": {
@@ -127,7 +127,6 @@ export default function ProductDetail() {
 
   const findByKeyword = (kw) => baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
 
-  // 탭 구성: 전면/측면은 이미지, 스펙/특장점은 텍스트(이미지 무시)
   const tabs = [
     { title: '전면',   type: 'image',    src: findByKeyword('전면') || baseItems[0]?.src || null },
     { title: '측면',   type: 'image',    src: findByKeyword('측면') || baseItems[1]?.src || null },
@@ -146,7 +145,6 @@ export default function ProductDetail() {
     }
   }, [id]);
 
-  // 힌트 3초 노출
   useEffect(() => {
     const timer = setTimeout(() => setShowSwipeHint(false), 3000);
     return () => clearTimeout(timer);
@@ -156,21 +154,17 @@ export default function ProductDetail() {
 
   const renderSpecs = (rows) => {
     if (!rows || rows.length === 0) {
-      return (
-        <div className="w-full h-full flex items-center justify-center text-gray-500">
-          스펙 자료 준비중
-        </div>
-      );
+      return <div className="w-full h-full flex items-center justify-center text-gray-500">스펙 자료 준비중</div>;
     }
     return (
       <div className="w-full h-full">
         <div className="h-full overflow-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-[13px]">
             <tbody>
               {rows.map((r, i) => (
                 <tr key={`spec-${i}`} className="even:bg-gray-50">
-                  <th className="w-36 px-4 py-3 text-left font-semibold text-gray-700 align-top border-r">{r.label}</th>
-                  <td className="px-4 py-3 text-gray-800">{r.value}</td>
+                  <th className="w-32 px-3 py-2 text-left font-semibold text-gray-700 align-top border-r">{r.label}</th>
+                  <td className="px-3 py-2 text-gray-800">{r.value}</td>
                 </tr>
               ))}
             </tbody>
@@ -182,16 +176,12 @@ export default function ProductDetail() {
 
   const renderFeatures = (items) => {
     if (!items || items.length === 0) {
-      return (
-        <div className="w-full h-full flex items-center justify-center text-gray-500">
-          특장점 자료 준비중
-        </div>
-      );
+      return <div className="w-full h-full flex items-center justify-center text-gray-500">특장점 자료 준비중</div>;
     }
     return (
       <div className="w-full h-full">
-        <div className="h-full overflow-auto p-4">
-          <ul className="list-disc pl-5 space-y-2 text-gray-800 text-sm">
+        <div className="h-full overflow-auto p-3">
+          <ul className="list-disc pl-5 space-y-1.5 text-gray-800 text-[13px]">
             {items.map((t, i) => (
               <li key={`feat-${i}`}>{t}</li>
             ))}
@@ -205,67 +195,19 @@ export default function ProductDetail() {
     <>
       <Header />
 
-      {/* 확대 모달 (이미지 탭에서만 사용) */}
+      {/* 확대 모달 */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80"
-          onClick={() => setSelectedImage(null)}
-        >
-          <button
-            className="absolute top-4 right-4 text-3xl text-gray-300 z-50"
-            onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-            aria-label="닫기"
-          >
-            ×
-          </button>
-
-          {selectedIndex > 0 && tabs[selectedIndex - 1]?.type === 'image' && tabs[selectedIndex - 1]?.src && (
-            <button
-              className="absolute left-4 text-4xl text-gray-300 z-50"
-              onClick={(e) => {
-                e.stopPropagation();
-                const newIndex = selectedIndex - 1;
-                setSelectedIndex(newIndex);
-                const prev = tabs[newIndex];
-                setSelectedImage(prev.type === 'image' ? prev.src : null);
-                swiperRef.current?.slideTo(newIndex);
-              }}
-              aria-label="이전 이미지"
-            >
-              ‹
-            </button>
-          )}
-
-          <img
-            src={selectedImage}
-            alt="확대 이미지"
-            className="max-w-full max-h-full rounded-xl"
-            onClick={(e) => e.stopPropagation()}
-          />
-
-          {selectedIndex < tabs.length - 1 && tabs[selectedIndex + 1]?.type === 'image' && tabs[selectedIndex + 1]?.src && (
-            <button
-              className="absolute right-4 text-4xl text-gray-300 z-50"
-              onClick={(e) => {
-                e.stopPropagation();
-                const newIndex = selectedIndex + 1;
-                setSelectedIndex(newIndex);
-                const next = tabs[newIndex];
-                setSelectedImage(next.type === 'image' ? next.src : null);
-                swiperRef.current?.slideTo(newIndex);
-              }}
-              aria-label="다음 이미지"
-            >
-              ›
-            </button>
-          )}
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80" onClick={() => setSelectedImage(null)}>
+          <button className="absolute top-4 right-4 text-3xl text-gray-300 z-50" onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }} aria-label="닫기">×</button>
+          <img src={selectedImage} alt="확대 이미지" className="max-w-full max-h-full rounded-xl" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
 
-      <div className="px-4 py-4 space-y-4 max-w-md mx-auto">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
+      <div className="px-3 py-3 space-y-3 max-w-md mx-auto pb-24">
+        {/* 제목 축소 */}
+        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
 
-        {/* 4개 탭 */}
+        {/* 탭 컴팩트 */}
         <div className="w-full">
           <div className="grid grid-cols-4 gap-2">
             {tabTitles.map((title, idx) => {
@@ -278,7 +220,7 @@ export default function ProductDetail() {
                     (active
                       ? "bg-blue-600 text-white border-blue-600 "
                       : "bg-white text-gray-700 border-gray-300 hover:border-blue-400 ") +
-                    "rounded-full border px-3 py-2 text-sm transition"
+                    "rounded-full border px-3 py-1.5 text-sm transition"
                   }
                   aria-current={active ? "true" : "false"}
                 >
@@ -289,71 +231,69 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 메인 컨텐츠: 모든 탭을 동일한 '정방형 카드'로 고정 */}
+        {/* 메인 컨텐츠: 모든 탭을 동일한 '정방형 카드(최대 320px)'로 */}
         <Swiper
           key={id}
           initialSlide={0}
-          spaceBetween={12}
+          spaceBetween={8}
           slidesPerView={1}
-          autoHeight={true}  // 모든 슬라이드가 같은 높이(정방형)이므로 변화 없음
+          autoHeight={true}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
         >
           {tabs.map((tb, idx) => (
             <SwiperSlide key={`slide-${idx}`}>
-              {/* 공통 카드 래퍼: 흰 배경 + 테두리 + 섀도우 + 정방형 */}
-              <div className="w-full rounded-2xl bg-white shadow border overflow-hidden relative">
-                <div className="aspect-[1/1]">
-                  {tb.type === 'image' ? (
-                    tb.src ? (
-                      <img
-                        src={tb.src}
-                        alt={`${product.name} - ${tb.title}`}
-                        className={
-                          (loadedImages[idx] ? "opacity-100 " : "opacity-0 ") +
-                          "w-full h-full object-cover transition-opacity duration-700"
-                        }
-                        onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
-                        onClick={() => { setSelectedImage(tb.src); setSelectedIndex(idx); }}
-                      />
+              {/* 카드: 폭 85% / 최대 320px, 정방형 */}
+              <div className="w-full flex justify-center">
+                <div className="w-[85%] max-w-[320px] rounded-2xl bg-white shadow border overflow-hidden relative">
+                  <div className="aspect-square">
+                    {tb.type === 'image' ? (
+                      tb.src ? (
+                        <img
+                          src={tb.src}
+                          alt={`${product.name} - ${tb.title}`}
+                          className={(loadedImages[idx] ? "opacity-100 " : "opacity-0 ") + "w-full h-full object-cover transition-opacity duration-700"}
+                          onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
+                          onClick={() => { setSelectedImage(tb.src); setSelectedIndex(idx); }}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-500">
+                          {tb.title} 자료 준비중
+                        </div>
+                      )
+                    ) : tb.type === 'specs' ? (
+                      renderSpecs(tb.specs)
                     ) : (
-                      <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-500">
-                        {tb.title} 자료 준비중
-                      </div>
-                    )
-                  ) : tb.type === 'specs' ? (
-                    <div className="w-full h-full">{renderSpecs(tb.specs)}</div>
-                  ) : (
-                    <div className="w-full h-full">{renderFeatures(tb.features)}</div>
+                      renderFeatures(tb.features)
+                    )}
+                  </div>
+
+                  {idx === 0 && showSwipeHint && tb.type === 'image' && tb.src && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs font-medium z-10">
+                      이미지를 좌우로 넘겨보세요 →
+                    </div>
                   )}
                 </div>
-
-                {/* 처음 진입 힌트 (이미지일 때만) */}
-                {idx === 0 && showSwipeHint && tb.type === 'image' && tb.src && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-sm font-medium z-10">
-                    이미지를 좌우로 넘겨보세요 →
-                  </div>
-                )}
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* CTA 버튼 (기존 구성 유지) */}
-        <div className="flex justify-between pt-2 flex-wrap gap-2">
+        {/* 하단 CTA(컴팩트) */}
+        <div className="flex justify-between pt-2 gap-2">
           <button
-            className="flex-1 min-w-[100px] max-w-[160px] bg-blue-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
+            className="flex-1 h-11 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
             onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
           >
-            <MdChat className="text-lg" />
+            <MdChat className="text-base" />
             상담하기
           </button>
 
           <button
-            className="flex-1 min-w-[100px] max-w-[160px] bg-slate-600 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
+            className="flex-1 h-11 bg-slate-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
             onClick={() => window.open('https://nocai.co.kr/', '_blank')}
           >
-            <MdHome className="text-lg" />
+            <MdHome className="text-base" />
             홈페이지
           </button>
 
@@ -361,24 +301,24 @@ export default function ProductDetail() {
             <a
               href={product.pdf}
               download
-              className="flex-1 min-w-[100px] max-w-[160px] bg-green-500 text-white py-2 px-3 rounded-lg shadow-sm transition active:scale-95 flex items-center justify-center gap-2 text-sm"
+              className="flex-1 h-11 bg-green-500 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
             >
-              <MdDownload className="text-lg" />
+              <MdDownload className="text-base" />
               상세정보
             </a>
           ) : (
             <button
               disabled
-              className="flex-1 min-w-[100px] max-w-[160px] bg-gray-400 text-white py-2 px-3 rounded-lg shadow-sm cursor-not-allowed opacity-60 flex items-center justify-center gap-2 text-sm"
+              className="flex-1 h-11 bg-gray-300 text-white rounded-lg shadow-sm cursor-not-allowed flex items-center justify-center gap-1.5 text-sm"
             >
-              <MdDownload className="text-lg" />
+              <MdDownload className="text-base" />
               상세정보 없음
             </button>
           )}
         </div>
 
-        {/* 회사 정보 */}
-        <div className="pt-2 text-center text-sm text-gray-500 leading-snug">
+        {/* 회사 정보 (간격 축소) */}
+        <div className="pt-1 text-center text-xs text-gray-500 leading-snug">
           (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
           인천테크노벨리 U1센터 B동 209호, 210호<br />
