@@ -41,7 +41,7 @@ const productData = {
   },
   "0609_max2": {
     name: 'NC-UV0609 Max2',
-    images: ['/product-b-1.jpg'],
+    images: ['/max2_front.webp', '/max2_side.webp'],
     pdf: '/max2_catalog.pdf',
     specs: [
       { label: '인쇄 영역', value: '600 x 900 mm' },
@@ -54,7 +54,7 @@ const productData = {
   },
   "0609_pe3s": {
     name: 'NC-UV0609 PE3S',
-    images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
+    images: ['/pe3s_front.webp', '/pe3s_side.webp'],
     pdf: '/pe3s_catalog.pdf',
     specs: [
       { label: '인쇄 영역', value: '600 x 900 mm' },
@@ -67,42 +67,42 @@ const productData = {
   },
   "a3max": {
     name: 'NC-UVA3 Max',
-    images: ['/a3max_front.webp', '/a3max_side.webp', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
+    images: ['/a3max_front.webp', '/a3max_side.webp'],
     pdf: '/a3max_catalog.pdf',
     specs: [],
     features: [],
   },
   "dtf30": {
     name: 'NC-UVDTF30',
-    images: ['/product-b-1.jpg'],
+    images: ['/dft30_front.webp', '/dtf30_side.webp'],
     pdf: '/dtf30_catalog.pdf',
     specs: [],
     features: [],
   },
   "dtf60": {
     name: 'NC-UVDTF60',
-    images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
+    images: ['/dtf60_front.webp', '/dtf60_side.webp'],
     pdf: '/dtf60_catalog.pdf',
     specs: [],
     features: [],
   },
   "1010_visual": {
     name: 'DL-1010 Visual',
-    images: ['/product-a-1.webp', '/product-a-2.JPG', '/product-a-3.JPG', '/product-a-4.JPG', '/product-a-5.JPG'],
+    images: ['/1010visual_front.webp'],
     pdf: '/1010visual_catalog.pdf',
     specs: [],
     features: [],
   },
   "1810": {
     name: 'DL-1810',
-    images: ['/product-b-1.jpg'],
+    images: ['/1810_front.webp'],
     pdf: '/1810_catalog.pdf',
     specs: [],
     features: [],
   },
   "2513": {
     name: 'DL-2513',
-    images: ['/product-c-1.jpg', '/product-c-2.png', '/product-c-3.png'],
+    images: ['/2513_side.webp'],
     pdf: '/2513_catalog.pdf',
     specs: [],
     features: [],
