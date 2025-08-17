@@ -215,14 +215,14 @@ export default function ProductDetail() {
       )}
 
       {/* 바깥 컨테이너(페이지 폭) */}
-      <div className="px-3 py-3 space-y-3 max-w-md mx-auto pb-24">
+      <div className="px-3 py-3 space-y-5 max-w-md mx-auto pb-24">
         {/* ✅ 제목: 공통 폭 적용 */}
-        <div className={INNER}>
+        <div className={INNER + "mb-2"}>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
         </div>
 
         {/* ✅ 탭: 공통 폭 적용 */}
-        <div className={INNER}>
+        <div className={INNER ="mt-2"}>
           <div className="grid grid-cols-4 gap-2">
             {tabTitles.map((title, idx) => {
               const active = idx === selectedIndex;
@@ -257,7 +257,7 @@ export default function ProductDetail() {
         >
           {tabs.map((tb, idx) => (
             <SwiperSlide key={`slide-${idx}`}>
-              <div className={INNER}>
+              <div className={INNER +"mt-4"}>
                 <div className="rounded-2xl bg-white shadow border overflow-hidden relative">
                   <div className="aspect-square">
                     {tb.type === 'image' ? (
@@ -294,7 +294,7 @@ export default function ProductDetail() {
 
         {/* ✅ CTA 버튼: 공통 폭 적용 */}
         <div className={INNER}>
-          <div className="flex justify-between gap-2">
+          <div className="flex justify-between gap-3">
             <button
               className="flex-1 h-11 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
               onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
