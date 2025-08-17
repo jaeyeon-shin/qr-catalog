@@ -9,7 +9,6 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
  * 전 제품 공통: 4개 탭(전면/측면/스펙/특장점)
  * - 전면/측면: 정방형 이미지(카드 테두리/섀도우 적용)
  * - 스펙: 표, 특장점: 리스트 (이미지 무시)
- * - 네 탭 모두 동일한 정방형 카드(최대 320px)로 축소 표시
  * - 제목/탭/이미지/CTA 모두 같은 좌우 여백(같은 폭)으로 정렬
  */
 const productData = {
@@ -18,8 +17,8 @@ const productData = {
     imageInfos: [
       { src: '/9060visual_front.webp', title: '전면' },
       { src: '/9060visual_side.webp',  title: '측면' },
-      { src: '/product-a-3.JPG', title: '스펙' },      // 있어도 사용하지 않음
-      { src: '/product-a-4.JPG', title: '특장점' },    // 있어도 사용하지 않음
+      { src: '/product-a-3.JPG', title: '스펙' },
+      { src: '/product-a-4.JPG', title: '특장점' },
     ],
     pdf: '/9060visual_catalog.pdf',
     specs: [
@@ -126,16 +125,14 @@ export default function ProductDetail() {
   const swiperRef = useRef(null);
 
   // ✅ 공통 내부 폭: 동일 좌우 여백 맞추기 (이미지 카드/제목/탭/CTA 모두 동일)
-  const INNER = "mx-auto w-[85%] max-w-[320px]"; // 필요 시 85%/320px 조절
+  const INNER = "mx-auto w-[85%] max-w-[320px]";
 
   const tabTitles = ['전면', '측면', '스펙', '특장점'];
 
-  // 제품별 원본 이미지 소스 (imageInfos 우선) — 스펙/특장점 제목은 제외
   const baseItemsRaw = product?.imageInfos?.length
     ? product.imageInfos.map((x) => ({ src: x.src, title: x.title || '' }))
     : (product?.images || []).map((src) => ({ src, title: '' }));
   const baseItems = baseItemsRaw.filter((it) => !/(스펙|특장점)/.test(it.title || ''));
-
   const findByKeyword = (kw) => baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
 
   const tabs = [
@@ -145,15 +142,12 @@ export default function ProductDetail() {
     { title: '특장점', type: 'features', features: product?.features || [] },
   ];
 
-  // 항상 첫 탭('전면')에서 시작
   useEffect(() => {
     setSelectedIndex(0);
     setSelectedImage(null);
     setShowSwipeHint(true);
     setLoadedImages({});
-    if (swiperRef.current?.slideTo) {
-      swiperRef.current.slideTo(0, 0);
-    }
+    swiperRef.current?.slideTo?.(0, 0);
   }, [id]);
 
   useEffect(() => {
@@ -169,13 +163,15 @@ export default function ProductDetail() {
     }
     return (
       <div className="w-full h-full">
-        <div className="h-full overflow-auto">
+        <div className="h-full">
           <table className="w-full text-[13px]">
             <tbody>
               {rows.map((r, i) => (
-                <tr key={`spec-${i}`} className="even:bg-gray-50">
-                  <th className="w-32 px-3 py-2 text-left font-semibold text-gray-700 align-top border-r">{r.label}</th>
-                  <td className="px-3 py-2 text-gray-800">{r.value}</td>
+                <tr key={`spec-${i}`} className="border-b last:border-b-0 border-gray-100">
+                  <th className="w-36 px-4 py-3 text-left font-semibold text-gray-700 bg-gray-50 align-top">
+                    {r.label}
+                  </th>
+                  <td className="px-4 py-3 text-gray-900">{r.value}</td>
                 </tr>
               ))}
             </tbody>
@@ -191,10 +187,13 @@ export default function ProductDetail() {
     }
     return (
       <div className="w-full h-full">
-        <div className="h-full overflow-auto p-3">
-          <ul className="list-disc pl-5 space-y-1.5 text-gray-800 text-[13px]">
+        <div className="p-4">
+          <ul className="space-y-2.5 text-gray-900 text-[13px]">
             {items.map((t, i) => (
-              <li key={`feat-${i}`}>{t}</li>
+              <li key={`feat-${i}`} className="pl-4 relative">
+                <span className="absolute left-0 top-2 block h-1.5 w-1.5 rounded-full bg-blue-500" />
+                {t}
+              </li>
             ))}
           </ul>
         </div>
@@ -215,16 +214,16 @@ export default function ProductDetail() {
       )}
 
       {/* 바깥 컨테이너(페이지 폭) */}
-      <div className="px-3 py-3 space-y-5 max-w-md mx-auto pb-24">
-        {/* ✅ 제목: 공통 폭 적용 */}
-        <div className={INNER + "mb-2"}>
+      <div className="px-3 py-4 space-y-6 max-w-md mx-auto pb-24">{/* ★ spacing: 섹션 간격 넓힘 */}
+        {/* 제목 */}
+        <div className={INNER + " mb-1"}>{/* ★ spacing */}
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
         </div>
 
-        {/* ✅ 탭: 공통 폭 적용 */}
-        <div className={INNER ="mt-2"}>
-          <div className="grid grid-cols-4 gap-2">
-            {tabTitles.map((title, idx) => {
+        {/* 탭 */}
+        <div className={INNER + " mt-1"}>{/* ★ spacing */}
+          <div className="grid grid-cols-4 gap-3">{/* ★ spacing: 칩 간격 */}
+            {['전면','측면','스펙','특장점'].map((title, idx) => {
               const active = idx === selectedIndex;
               return (
                 <button
@@ -234,7 +233,7 @@ export default function ProductDetail() {
                     (active
                       ? "bg-blue-600 text-white border-blue-600 "
                       : "bg-white text-gray-700 border-gray-300 hover:border-blue-400 ") +
-                    "rounded-full border px-3 py-1.5 text-sm transition"
+                    "rounded-full border px-3 py-2 text-sm transition" /* ★ spacing: 버튼 높이 */
                   }
                   aria-current={active ? "true" : "false"}
                 >
@@ -245,11 +244,11 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* ✅ 메인 컨텐츠: 이미지/스펙/특장점 모두 같은 폭 + 정방형 카드 */}
+        {/* 메인 컨텐츠 */}
         <Swiper
           key={id}
           initialSlide={0}
-          spaceBetween={8}
+          spaceBetween={10}            /* ★ spacing: 카드간 여백 살짝 */
           slidesPerView={1}
           autoHeight={true}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -257,7 +256,7 @@ export default function ProductDetail() {
         >
           {tabs.map((tb, idx) => (
             <SwiperSlide key={`slide-${idx}`}>
-              <div className={INNER +"mt-4"}>
+              <div className={INNER}>
                 <div className="rounded-2xl bg-white shadow border overflow-hidden relative">
                   <div className="aspect-square">
                     {tb.type === 'image' ? (
@@ -275,9 +274,13 @@ export default function ProductDetail() {
                         </div>
                       )
                     ) : tb.type === 'specs' ? (
-                      renderSpecs(tb.specs)
+                      <div className="p-4">{/* ★ spacing: 카드 안쪽 패딩 */}
+                        {renderSpecs(tb.specs)}
+                      </div>
                     ) : (
-                      renderFeatures(tb.features)
+                      <div className="p-4">{/* ★ spacing */}
+                        {renderFeatures(tb.features)}
+                      </div>
                     )}
                   </div>
 
@@ -292,9 +295,9 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        {/* ✅ CTA 버튼: 공통 폭 적용 */}
-        <div className={INNER}>
-          <div className="flex justify-between gap-3">
+        {/* CTA */}
+        <div className={INNER + " mt-2"}>{/* ★ spacing */}
+          <div className="flex justify-between gap-3">{/* ★ spacing: 버튼 간격 */}
             <button
               className="flex-1 h-11 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
               onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
@@ -332,8 +335,8 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 회사 정보 (페이지 폭 그대로) */}
-        <div className="pt-1 text-center text-xs text-gray-500 leading-snug">
+        {/* 회사 정보 */}
+        <div className="pt-2 text-center text-xs text-gray-500 leading-snug">{/* ★ spacing */}
           (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
           인천테크노벨리 U1센터 B동 209호, 210호<br />
