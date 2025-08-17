@@ -1,16 +1,16 @@
 import { useParams } from 'react-router-dom';
 import Header from './components/Header';
-import { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
 /**
  * 전 제품 공통: 4개 탭(전면/측면/스펙/특장점)
- * - 스펙 카드의 실제 높이를 기준으로 모든 탭 카드 높이를 통일
- * - 스펙이 없으면 특장점 → 그래도 없으면 MIN_CARD_HEIGHT 사용
- * - 이미지 탭은 object-contain으로 카드 안에 맞춰 중앙 정렬
- * - 제목/탭/카드/CTA 좌우 여백 동일
+ * - 전면/측면: 정방형 이미지(카드 테두리/섀도우 적용)
+ * - 스펙: 표, 특장점: 리스트 (이미지 무시)
+ * - 네 탭 모두 동일한 정방형 카드(최대 320px)로 축소 표시
+ * - 제목/탭/이미지/CTA 모두 같은 좌우 여백(같은 폭)으로 정렬
  */
 const productData = {
   "9060_visual": {
@@ -18,8 +18,8 @@ const productData = {
     imageInfos: [
       { src: '/9060visual_front.webp', title: '전면' },
       { src: '/9060visual_side.webp',  title: '측면' },
-      { src: '/product-a-3.JPG', title: '스펙' },
-      { src: '/product-a-4.JPG', title: '특장점' },
+      { src: '/product-a-3.JPG', title: '스펙' },      // 있어도 사용하지 않음
+      { src: '/product-a-4.JPG', title: '특장점' },    // 있어도 사용하지 않음
     ],
     pdf: '/9060visual_catalog.pdf',
     specs: [
@@ -125,17 +125,17 @@ export default function ProductDetail() {
   const [loadedImages, setLoadedImages] = useState({});
   const swiperRef = useRef(null);
 
-  // ✅ 내부 폭(공통 여백)
-  const INNER = "mx-auto w-[85%] max-w-[320px]";
-  const MIN_CARD_HEIGHT = 320; // 기본 최소 카드 높이(px) — 필요하면 여기만 조정
+  // ✅ 공통 내부 폭: 동일 좌우 여백 맞추기 (이미지 카드/제목/탭/CTA 모두 동일)
+  const INNER = "mx-auto w-[85%] max-w-[320px]"; // 필요 시 85%/320px 조절
 
   const tabTitles = ['전면', '측면', '스펙', '특장점'];
 
-  // 이미지 소스 정리 (imageInfos 우선)
+  // 제품별 원본 이미지 소스 (imageInfos 우선) — 스펙/특장점 제목은 제외
   const baseItemsRaw = product?.imageInfos?.length
     ? product.imageInfos.map((x) => ({ src: x.src, title: x.title || '' }))
     : (product?.images || []).map((src) => ({ src, title: '' }));
   const baseItems = baseItemsRaw.filter((it) => !/(스펙|특장점)/.test(it.title || ''));
+
   const findByKeyword = (kw) => baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
 
   const tabs = [
@@ -145,76 +145,60 @@ export default function ProductDetail() {
     { title: '특장점', type: 'features', features: product?.features || [] },
   ];
 
-  // ✔ 스펙/특장점 자연 높이 측정 → 카드 높이 통일
-  const specRef = useRef(null);
-  const featRef = useRef(null);
-  const [cardHeight, setCardHeight] = useState(null);
-
   // 항상 첫 탭('전면')에서 시작
   useEffect(() => {
     setSelectedIndex(0);
     setSelectedImage(null);
     setShowSwipeHint(true);
     setLoadedImages({});
-    setCardHeight(null); // 제품 바뀌면 다시 측정
-    swiperRef.current?.slideTo?.(0, 0);
+    if (swiperRef.current?.slideTo) {
+      swiperRef.current.slideTo(0, 0);
+    }
   }, [id]);
 
-  // 이미지 로드/창 크기 변경/데이터 변경 시 재측정
-  useLayoutEffect(() => {
-    const measure = () => {
-      const specH = specRef.current?.offsetHeight || 0;
-      const featH = featRef.current?.offsetHeight || 0;
-      // “스펙 기준” 원칙: 스펙 높이가 있으면 그걸 우선, 없으면 특장점, 둘 다 없으면 최소값
-      const target = specH || featH || MIN_CARD_HEIGHT;
-      setCardHeight(Math.max(MIN_CARD_HEIGHT, target));
-    };
-    // 첫 렌더 후 측정
-    requestAnimationFrame(measure);
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [id, product?.specs?.length, product?.features?.length, loadedImages]);
-
-  // 힌트 3초 노출
   useEffect(() => {
-    const t = setTimeout(() => setShowSwipeHint(false), 3000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setShowSwipeHint(false), 3000);
+    return () => clearTimeout(timer);
   }, []);
 
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
 
-  // ========== 렌더러 ==========
-  const SpecsTable = ({ rows }) => {
+  const renderSpecs = (rows) => {
     if (!rows || rows.length === 0) {
-      return <div className="w-full text-center text-gray-500 py-8">스펙 자료 준비중</div>;
+      return <div className="w-full h-full flex items-center justify-center text-gray-500">스펙 자료 준비중</div>;
     }
     return (
-      <table className="w-full text-[13px]">
-        <tbody>
-          {rows.map((r, i) => (
-            <tr key={`spec-${i}`} className="border-b last:border-b-0 border-gray-100 align-top">
-              <th className="w-32 px-3 py-2.5 text-left font-semibold text-gray-600 bg-gray-50">{r.label}</th>
-              <td className="px-3 py-2.5 text-gray-900 break-words">{r.value}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="w-full h-full">
+        <div className="h-full overflow-auto">
+          <table className="w-full text-[13px]">
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={`spec-${i}`} className="even:bg-gray-50">
+                  <th className="w-32 px-3 py-2 text-left font-semibold text-gray-700 align-top border-r">{r.label}</th>
+                  <td className="px-3 py-2 text-gray-800">{r.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     );
   };
 
-  const FeaturesList = ({ items }) => {
+  const renderFeatures = (items) => {
     if (!items || items.length === 0) {
-      return <div className="w-full text-center text-gray-500 py-8">특장점 자료 준비중</div>;
+      return <div className="w-full h-full flex items-center justify-center text-gray-500">특장점 자료 준비중</div>;
     }
     return (
-      <ul className="space-y-2 text-gray-900 text-[13px]">
-        {items.map((t, i) => (
-          <li key={`feat-${i}`} className="pl-4 relative">
-            <span className="absolute left-0 top-2 block h-1.5 w-1.5 rounded-full bg-blue-500" />
-            {t}
-          </li>
-        ))}
-      </ul>
+      <div className="w-full h-full">
+        <div className="h-full overflow-auto p-3">
+          <ul className="list-disc pl-5 space-y-1.5 text-gray-800 text-[13px]">
+            {items.map((t, i) => (
+              <li key={`feat-${i}`}>{t}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
     );
   };
 
@@ -224,34 +208,20 @@ export default function ProductDetail() {
 
       {/* 확대 모달 */}
       {selectedImage && (
-        <div
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/80"
-          onClick={() => setSelectedImage(null)}
-        >
-          <button
-            className="absolute top-4 right-4 text-3xl text-gray-300 z-50"
-            onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }}
-            aria-label="닫기"
-          >
-            ×
-          </button>
-          <img
-            src={selectedImage}
-            alt="확대 이미지"
-            className="max-w-full max-h-full rounded-xl"
-            onClick={(e) => e.stopPropagation()}
-          />
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/80" onClick={() => setSelectedImage(null)}>
+          <button className="absolute top-4 right-4 text-3xl text-gray-300 z-50" onClick={(e) => { e.stopPropagation(); setSelectedImage(null); }} aria-label="닫기">×</button>
+          <img src={selectedImage} alt="확대 이미지" className="max-w-full max-h-full rounded-xl" onClick={(e) => e.stopPropagation()} />
         </div>
       )}
 
-      {/* 페이지 컨테이너 */}
+      {/* 바깥 컨테이너(페이지 폭) */}
       <div className="px-3 py-3 space-y-3 max-w-md mx-auto pb-24">
-        {/* 제목 */}
+        {/* ✅ 제목: 공통 폭 적용 */}
         <div className={INNER}>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
         </div>
 
-        {/* 탭 */}
+        {/* ✅ 탭: 공통 폭 적용 */}
         <div className={INNER}>
           <div className="grid grid-cols-4 gap-2">
             {tabTitles.map((title, idx) => {
@@ -275,51 +245,42 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 메인 컨텐츠: 카드 높이 통일 (스펙 기준) */}
+        {/* ✅ 메인 컨텐츠: 이미지/스펙/특장점 모두 같은 폭 + 정방형 카드 */}
         <Swiper
           key={id}
           initialSlide={0}
           spaceBetween={8}
           slidesPerView={1}
-          autoHeight={false}
+          autoHeight={true}
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           onSlideChange={(swiper) => setSelectedIndex(swiper.activeIndex)}
         >
           {tabs.map((tb, idx) => (
             <SwiperSlide key={`slide-${idx}`}>
               <div className={INNER}>
-                <div
-                  className="rounded-2xl bg-white shadow border overflow-hidden relative"
-                  style={{ height: cardHeight ?? 'auto' }}
-                >
-                  {/* 콘텐츠(자연 높이) */}
-                  {tb.type === 'image' ? (
-                    tb.src ? (
-                      <div className="w-full h-full flex items-center justify-center">
+                <div className="rounded-2xl bg-white shadow border overflow-hidden relative">
+                  <div className="aspect-square">
+                    {tb.type === 'image' ? (
+                      tb.src ? (
                         <img
                           src={tb.src}
                           alt={`${product.name} - ${tb.title}`}
-                          className={(loadedImages[idx] ? "opacity-100 " : "opacity-0 ") + "max-w-full max-h-full object-contain transition-opacity duration-700 p-2"}
+                          className={(loadedImages[idx] ? "opacity-100 " : "opacity-0 ") + "w-full h-full object-cover transition-opacity duration-700"}
                           onLoad={() => setLoadedImages((prev) => ({ ...prev, [idx]: true }))}
                           onClick={() => { setSelectedImage(tb.src); setSelectedIndex(idx); }}
                         />
-                      </div>
+                      ) : (
+                        <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-500">
+                          {tb.title} 자료 준비중
+                        </div>
+                      )
+                    ) : tb.type === 'specs' ? (
+                      renderSpecs(tb.specs)
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500">
-                        {tb.title} 자료 준비중
-                      </div>
-                    )
-                  ) : tb.type === 'specs' ? (
-                    <div ref={specRef} className="p-3">
-                      <SpecsTable rows={tb.specs} />
-                    </div>
-                  ) : (
-                    <div ref={featRef} className="p-3">
-                      <FeaturesList items={tb.features} />
-                    </div>
-                  )}
+                      renderFeatures(tb.features)
+                    )}
+                  </div>
 
-                  {/* 첫 탭 힌트 */}
                   {idx === 0 && showSwipeHint && tb.type === 'image' && tb.src && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs font-medium z-10">
                       이미지를 좌우로 넘겨보세요 →
@@ -331,7 +292,7 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        {/* CTA */}
+        {/* ✅ CTA 버튼: 공통 폭 적용 */}
         <div className={INNER}>
           <div className="flex justify-between gap-2">
             <button
@@ -371,7 +332,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* 회사 정보 */}
+        {/* 회사 정보 (페이지 폭 그대로) */}
         <div className="pt-1 text-center text-xs text-gray-500 leading-snug">
           (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
