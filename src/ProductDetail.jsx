@@ -486,7 +486,7 @@ export default function ProductDetail() {
 
             <button
               className="flex-1 h-9 bg-blue-600 text-white rounded-lg shadow-sm active:scale-[0.98] flex items-center justify-center gap-1.5 text-sm"
-              onClick={() => window.open('https://nocai.co.kr/board/contact/list.html', '_blank')}
+              onClick={() => window.open('https://visitor-registeration.vercel.app/', '_blank')}
             >
               <MdChat className="text-base" />
               상담하기
