@@ -98,7 +98,7 @@ const productData = {
   },
   "dtf30": {
     name: 'NC-UVDTF30',
-    images: ['/dft30_front.webp', '/dtf30_side.webp'],
+    images: ['/dtf30_front.webp', '/dtf30_side.webp'],
     pdf: '/dtf30_catalog.pdf',
     specs: [
       { label: '헤드', value: 'EPSON i3200-U1HD' },
