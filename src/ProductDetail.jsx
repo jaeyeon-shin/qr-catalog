@@ -10,11 +10,13 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
  * - imageInfos에 title '전면/측면'이 있으면 우선 매칭. 없으면 images 배열 순서대로 전면/측면 추정.
  * - 스펙(specs), 특장점(features) 배열은 표/리스트로 렌더링.
  * - 필요 시 제품별 데이터만 여기서 손보면 UI 반영됨.
+ * - highlight: 제목 하이라이트 색상(hex)
  */
 const productData = {
   "9060_visual": {
     name: 'NC-UV9060 Visual',
-    tagline: '풍부한 컬러와 카메라 포지셔닝', // ← 서브카피(있으면 표시)
+    tagline: '풍부한 컬러와 카메라 포지셔닝',
+    highlight: '#f49f4f',
     imageInfos: [
       { src: '/9060visual_front.webp', title: '전면' },
       { src: '/9060visual_side.webp',  title: '측면' },
@@ -43,6 +45,7 @@ const productData = {
   "0609_max2": {
     name: 'NC-UV0609 Max2',
     tagline: '생산량에 최적화된 빠른 스피드',
+    highlight: '#e9a092',
     images: ['/max2_front.webp', '/max2_side.webp'],
     pdf: '/max2_catalog.pdf',
     specs: [
@@ -65,6 +68,7 @@ const productData = {
   "0609_pe3s": {
     name: 'NC-UV0609 PE3S',
     tagline: '하나로, 한번에, 속도까지',
+    highlight: '#10ff8a',
     images: ['/pe3s_front.webp', '/pe3s_side.webp'],
     pdf: '/pe3s_catalog.pdf',
     specs: [
@@ -87,6 +91,7 @@ const productData = {
   "a3max": {
     name: 'NC-UVA3 Max',
     tagline: '다재다능 팔방미인',
+    highlight: '#ff4b89',
     images: ['/a3max_front.webp', '/a3max_side.webp'],
     pdf: '/a3max_catalog.pdf',
     specs: [
@@ -110,6 +115,7 @@ const productData = {
   "dtf30": {
     name: 'NC-UVDTF30',
     tagline: 'UV-DTF & 라미네이팅 All-in-one',
+    highlight: '#df007d',
     images: ['/dtf30_front.webp', '/dtf30_side.webp'],
     pdf: '/dtf30_catalog.pdf',
     specs: [
@@ -132,6 +138,7 @@ const productData = {
   "dtf60": {
     name: 'NC-UVDTF60',
     tagline: 'UV-DTF & 라미네이팅 All-in-one',
+    highlight: '#334273',
     images: ['/dtf60_front.webp', '/dtf60_side.webp'],
     pdf: '/dtf60_catalog.pdf',
     specs: [
@@ -155,6 +162,7 @@ const productData = {
   "1010_visual": {
     name: 'DL-1010 Visual',
     tagline: '압도적인 출력 퀄리티 & 속도',
+    highlight: '#50b7d9',
     images: ['/1010visual_front.webp'],
     pdf: '/1010visual_catalog.pdf',
     specs: [
@@ -178,6 +186,7 @@ const productData = {
   "1810": {
     name: 'DL-1810',
     tagline: '압도적인 출력 퀄리티 & 속도',
+    highlight: '#50b7d9',
     images: ['/1810_front.webp'],
     pdf: '/1810_catalog.pdf',
     specs: [
@@ -196,6 +205,7 @@ const productData = {
   "2513": {
     name: 'DL-2513',
     tagline: '압도적인 출력 퀄리티 & 속도',
+    highlight: '#50b7d9',
     images: ['/2513_side.webp'],
     pdf: '/2513_catalog.pdf',
     specs: [
@@ -276,10 +286,10 @@ export default function ProductDetail() {
             <tbody>
               {rows.map((r, i) => (
                 <tr key={`spec-${i}`} className="border-b last:border-b-0 border-gray-100">
-                  <th className="px-4 py-2.5 text-left font-semibold text-gray-700 bg-gray-50 align-top whitespace-nowrap">
+                  <th className="px-4 py-2.5 text-left font-semibold text-gray-700 bg-gray-50 align-top [word-break:keep-all] break-words whitespace-pre-line">
                     {r.label}
                   </th>
-                  <td className="px-4 py-2.5 text-gray-900">{r.value}</td>
+                  <td className="px-4 py-2.5 text-gray-900 [word-break:keep-all] break-words whitespace-pre-line">{r.value}</td>
                 </tr>
               ))}
             </tbody>
@@ -299,7 +309,7 @@ export default function ProductDetail() {
         <div className="p-3">
           <ul className="space-y-2 text-gray-900 text-[14px]">
             {items.map((t, i) => (
-              <li key={`feat-${i}`} className="pl-4 relative">
+              <li key={`feat-${i}`} className="pl-4 relative [word-break:keep-all] break-words whitespace-pre-line ">
                 <span className="absolute left-0 top-2 block h-1.5 w-1.5 rounded-full bg-blue-500" />
                 {t}
               </li>
@@ -351,7 +361,8 @@ export default function ProductDetail() {
             <span className="relative z-10">{product.name}</span>
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute left-0 right-0 bottom-0 h-[0.42em] bg-amber-300/60 rounded-sm"
+              className="pointer-events-none absolute left-0 right-0 bottom-0 h-[0.42em] rounded-sm"
+              style={{ backgroundColor: product?.highlight || '#facc15', opacity: 0.6 }}
             />
           </h1>
         </div>
