@@ -53,89 +53,53 @@ export default function Header() {
           </button>
         </div>
 
-        {/* 드롭다운 메뉴 (심플 스타일: 테두리/섀도우 제거, 간격 축소) */}
+        {/* 드롭다운 메뉴: 세로 1열 리스트 */}
         {open && (
           <div ref={menuRef} className="max-w-md mx-auto px-3 pb-2">
             <nav className="bg-white">
-              <ul className="grid grid-cols-2 gap-1 text-sm">
+              <ul className="flex flex-col text-sm divide-y border rounded-md overflow-hidden">
                 <li>
-                  <Link
-                    to="/product/9060_visual"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/9060_visual" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     NC-UV9060 Visual
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/0609_max2"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/0609_max2" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     NC-UV0609 Max2
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/0609_pe3s"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/0609_pe3s" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     NC-UV0609 PE3S
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/a3max"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/a3max" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     NC-UVA3 Max
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/1010_visual"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/1010_visual" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     DL-1010 Visual
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/1810"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/1810" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     DL-1810
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/2513"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/2513" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     DL-2513
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/dtf30"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/dtf30" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     NC-UVDTF30
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/product/dtf60"
-                    onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 hover:bg-gray-50"
-                  >
+                  <Link to="/product/dtf60" onClick={() => setOpen(false)} className="block px-3 py-2 hover:bg-gray-50">
                     NC-UVDTF60
                   </Link>
                 </li>

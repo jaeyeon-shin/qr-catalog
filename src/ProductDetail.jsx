@@ -6,11 +6,10 @@ import 'swiper/css';
 import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
 /**
- * 네가 준 버전에서 요청한 부분만 수정:
- * 1) 컨텐츠 간 여백 축소 (제목↔탭, 탭↔이미지, 이미지↔CTA, CTA↔문구)
- * 2) 확대 이미지: X 외에도 오버레이 클릭 시 닫힘(기존 유지)
- * 3) ESG 문구는 위치/스타일 변경 제안만. (코드 변경 없음)
- * 4) 헤더 드롭메뉴는 이전 디자인 유지, 동작 로직만 Header.jsx에 별도 패치(아래 참고)
+ * 전 제품 공통: 4개 탭(전면/측면/스펙/특장점)
+ * - 전면/측면: 정방형 이미지(카드 테두리/섀도우 적용)
+ * - 스펙: 표, 특장점: 리스트 (이미지 무시)
+ * - 제목/탭/이미지/CTA 모두 같은 좌우 여백(같은 폭)으로 정렬
  */
 const productData = {
   "9060_visual": {
@@ -190,37 +189,52 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
+  const [hintFading, setHintFading] = useState(false);
   const [loadedImages, setLoadedImages] = useState({});
   const swiperRef = useRef(null);
 
   // 좌우 여백 통일
   const INNER = "mx-auto w-[85%] max-w-[320px]";
 
+  // 원본 이미지 목록 (imageInfos 우선)
   const baseItemsRaw = product?.imageInfos?.length
     ? product.imageInfos.map((x) => ({ src: x.src, title: x.title || '' }))
     : (product?.images || []).map((src) => ({ src, title: '' }));
   const baseItems = baseItemsRaw.filter((it) => !/(스펙|특장점)/.test(it.title || ''));
+
   const findByKeyword = (kw) => baseItems.find((it) => (it.title || '').includes(kw))?.src || null;
 
+  // 전면/측면 소스 결정 + 측면 탭 노출 여부
+  const frontSrc = findByKeyword('전면') || baseItems[0]?.src || null;
+  const sideCandidate = findByKeyword('측면') || (baseItems[1]?.src || null);
+  const sideSrc = sideCandidate && sideCandidate !== frontSrc ? sideCandidate : null; // 전면과 같으면 제외
+  const hasSide = !!sideSrc;
+
+  // 동적 탭 구성 (측면 없으면 제외)
   const tabs = [
-    { title: '전면',   type: 'image',    src: findByKeyword('전면') || baseItems[0]?.src || null },
-    { title: '측면',   type: 'image',    src: findByKeyword('측면') || baseItems[1]?.src || null },
+    { title: '전면',   type: 'image',    src: frontSrc },
+    ...(hasSide ? [{ title: '측면', type: 'image', src: sideSrc }] : []),
     { title: '스펙',   type: 'specs',    specs: product?.specs || [] },
     { title: '특장점', type: 'features', features: product?.features || [] },
   ];
 
+  // 제품 바뀌면 항상 전면부터
   useEffect(() => {
     setSelectedIndex(0);
     setSelectedImage(null);
-    setShowSwipeHint(true);
     setLoadedImages({});
     swiperRef.current?.slideTo?.(0, 0);
-  }, [id]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowSwipeHint(false), 3000);
-    return () => clearTimeout(timer);
-  }, []);
+    // 힌트 1.5초 유지 + 0.5초 페이드 아웃
+    setShowSwipeHint(true);
+    setHintFading(false);
+    const t1 = setTimeout(() => setHintFading(true), 1500);
+    const t2 = setTimeout(() => setShowSwipeHint(false), 2000);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [id]);
 
   if (!product) return <div className="p-4">제품 정보를 찾을 수 없습니다.</div>;
 
@@ -272,7 +286,7 @@ export default function ProductDetail() {
     <>
       <Header />
 
-      {/* 확대 모달: X + 오버레이 클릭 닫힘(유지) */}
+      {/* 확대 모달: X + 오버레이 클릭 닫힘 */}
       {selectedImage && (
         <div
           className="fixed inset-0 flex items-center justify-center z-50 bg-black/80"
@@ -296,21 +310,21 @@ export default function ProductDetail() {
         </div>
       )}
 
-      {/* 컨테이너: 섹션 간 간격 전반적으로 축소 */}
-      <div className="px-3 py-3 space-y-4 max-w-md mx-auto pb-20">
-        {/* 제목 — 아래 여백 살짝 */}
-        <div className={INNER + " mb-1"}>
+      {/* 페이지 컨테이너 */}
+      <div className="px-3 py-3 space-y-3 max-w-md mx-auto pb-20">
+        {/* 제목 */}
+        <div className={`${INNER} mb-1`}>
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">{product.name}</h1>
         </div>
 
-        {/* 탭 — 위/아래 패딩/간격 축소 */}
-        <div className={INNER + " mt-0.5"}>
-          <div className="grid grid-cols-4 gap-2">
-            {['전면','측면','스펙','특장점'].map((title, idx) => {
+        {/* 탭 바: 스크롤 내려도 고정(sticky). 헤더 높이 고려해 top 조정 */}
+        <div className={`sticky top-[52px] z-30 bg-white/90 backdrop-blur ${INNER} py-1`}>
+          <div className="grid" style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0,1fr))`, gap: '0.5rem' }}>
+            {tabs.map((t, idx) => {
               const active = idx === selectedIndex;
               return (
                 <button
-                  key={`tab-${idx}`}
+                  key={`tab-${t.title}-${idx}`}
                   onClick={() => { swiperRef.current?.slideTo(idx); setSelectedIndex(idx); }}
                   className={
                     (active
@@ -320,14 +334,14 @@ export default function ProductDetail() {
                   }
                   aria-current={active ? "true" : "false"}
                 >
-                  {title}
+                  {t.title}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* 메인 컨텐츠 — 탭과 이미지 사이 간격/카드 내부 패딩 축소 */}
+        {/* 메인 컨텐츠 */}
         <Swiper
           key={id}
           initialSlide={0}
@@ -367,8 +381,14 @@ export default function ProductDetail() {
                     )}
                   </div>
 
+                  {/* 스와이프 힌트: 1.5초 후 0.5초 페이드아웃 */}
                   {idx === 0 && showSwipeHint && tb.type === 'image' && tb.src && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs font-medium z-10">
+                    <div
+                      className={
+                        "absolute inset-0 flex items-center justify-center text-white text-xs font-medium z-10 " +
+                        (hintFading ? "bg-black/0 opacity-0 transition-opacity duration-500" : "bg-black/30 opacity-100")
+                      }
+                    >
                       이미지를 좌우로 넘겨보세요 →
                     </div>
                   )}
@@ -378,7 +398,7 @@ export default function ProductDetail() {
           ))}
         </Swiper>
 
-        {/* CTA — 이미지와 CTA 간격, 버튼 높이/여백 축소 */}
+        {/* CTA 버튼 */}
         <div className={INNER + " mt-1"}>
           <div className="flex justify-between gap-2">
             <button
@@ -418,14 +438,7 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* ESG 문구 — (요청: 제안만. 코드 스타일 변경 없이 간격만 살짝 축소) */}
-        <div className={INNER + " pt-1"}>
-          <p className="text-center text-[11px] text-gray-600 border-t pt-1 leading-relaxed">
-            K-Print 2025 Paperless(페이퍼리스) 지속가능한 전시회를 위한 ESG 캠페인에 동참합니다.
-          </p>
-        </div>
-
-        {/* 회사 정보 — 위쪽 여백 소폭 축소 */}
+        {/* 회사 정보 */}
         <div className="pt-1 text-center text-xs text-gray-500 leading-snug">
           (주)씨엠테크 | 032-361-2114<br />
           인천광역시 부평구 주부토로 236<br />
