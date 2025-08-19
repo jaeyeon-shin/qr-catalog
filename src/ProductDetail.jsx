@@ -166,8 +166,8 @@ const productData = {
     images: ['/1010visual_front.webp'],
     pdf: '/1010visual_catalog.pdf',
     specs: [
-      { label: '헤드', value: 'EPSON i1600 | i3200' },
-      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '헤드', value: 'EPSON i3200-U1HD' },
+      { label: '인쇄 모드', value: 'W + C + V + P 동시출력' },
       { label: '인쇄 면적', value: '900 x 900mm' },
       { label: '인쇄 높이', value: '350mm' },
       { label: '출력 컬러', value: 'CMYKLcLm + W + V' },
@@ -193,7 +193,7 @@ const productData = {
     pdf: '/1810_catalog.pdf',
     specs: [
       { label: '헤드', value: 'Ricoh G6' },
-      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 모드', value: 'W + C + V + P 동시출력' },
       { label: '인쇄 면적', value: '1,800 x 1,000mm' },
       { label: '인쇄 높이', value: '200mm' },
       { label: '출력 컬러', value: 'CMYKLcLm + W + V' },
@@ -220,7 +220,7 @@ const productData = {
     pdf: '/2513_catalog.pdf',
     specs: [
       { label: '헤드', value: 'Ricoh G6' },
-      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 모드', value: 'W + C + V + P 동시출력' },
       { label: '인쇄 면적', value: '2500 x 1300mm' },
       { label: '인쇄 높이', value: '200mm' },
       { label: '출력 컬러', value: 'CMYKLcLm + W + V' },
