@@ -249,26 +249,26 @@ export default function ProductDetail() {
         <div className={INNER + " mt-4 space-y-4"}>
           {/* ✅ 모바일: grid-cols-3, PC: flex-row + flex-1 */}
           <div className="grid grid-cols-3 gap-2 lg:flex lg:gap-3">
-            <button className="flex-1 h-10 bg-slate-600 text-white rounded-lg flex items-center justify-center gap-1.5 text-xs lg:text-base" onClick={() => window.open('https://nocai.co.kr/', '_blank')}>
+            <button className="flex-1 h-10 bg-slate-600 text-white rounded-lg flex items-center justify-center gap-1.5 text-sm lg:text-base" onClick={() => window.open('https://nocai.co.kr/', '_blank')}>
               <MdHome className="text-sm lg:text-lg" /> 홈페이지
             </button>
-            <button className="flex-1 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center gap-1.5 text-xs lg:text-base" onClick={() => window.open('https://visitor-registeration.vercel.app/', '_blank')}>
+            <button className="flex-1 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center gap-1.5 text-sm lg:text-base" onClick={() => window.open('https://visitor-registeration.vercel.app/', '_blank')}>
               <MdChat className="text-sm lg:text-lg" /> 상담하기
             </button>
             {product.pdf ? (
-              <a href={product.pdf} download className="flex-1 h-10 bg-green-500 text-white rounded-lg flex items-center justify-center gap-1.5 text-xs lg:text-base">
+              <a href={product.pdf} download className="flex-1 h-10 bg-green-500 text-white rounded-lg flex items-center justify-center gap-1.5 text-sm lg:text-base">
                 <MdDownload className="text-sm lg:text-lg" /> 상세정보
               </a>
             ) : (
-              <button disabled className="flex-1 h-10 bg-gray-300 text-white rounded-lg cursor-not-allowed flex items-center justify-center gap-1.5 text-xs lg:text-base">
+              <button disabled className="flex-1 h-10 bg-gray-300 text-white rounded-lg cursor-not-allowed flex items-center justify-center gap-1.5 text-sm lg:text-base">
                 <MdDownload className="text-sm lg:text-lg" /> 상세정보 없음
               </button>
             )}
           </div>
 
-          <p className="text-[14px] lg:text-sm text-gray-500 text-center leading-tight">
+          <p className="text-[15px] lg:text-sm text-gray-500 text-center leading-tight break-keep">
             해당 제품은 곧 공식 홈페이지에 업데이트될 예정입니다.<br />
-            그 전에 궁금하신 점이 있다면 <span className="font-semibold text-blue-600">‘상담하기’로 문의</span>를 남겨주세요.
+            문의가 필요하시면 <span className="font-semibold text-blue-600">‘상담하기’ 버튼</span>을 통해 남겨주세요.
           </p>
 
           <div className="border-t border-gray-100 pt-3 text-center text-[13px] lg:text-base text-gray-500 leading-snug">
