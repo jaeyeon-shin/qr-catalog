@@ -266,7 +266,7 @@ export default function ProductDetail() {
             )}
           </div>
 
-          <p className="text-[15px] lg:text-sm text-gray-500 text-center leading-tight break-keep">
+          <p className="text-[14px] lg:text-sm text-gray-500 text-center leading-tight break-keep">
             해당 제품은 곧 공식 홈페이지에 업데이트될 예정입니다.<br />
             문의가 필요하시면 <span className="font-semibold text-blue-600">‘상담하기’ 버튼</span>을 통해 남겨주세요.
           </p>
