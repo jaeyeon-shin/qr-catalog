@@ -13,6 +13,7 @@ import { MdChat, MdHome, MdDownload } from 'react-icons/md';
  * - highlight: 제목 하이라이트 색상(hex)
  */
 const productData = {
+  /*
   "9060_visual": {
     name: 'NC-UV9060 Visual',
     tagline: '풍부한 컬러와 카메라 포지셔닝',
@@ -159,6 +160,8 @@ const productData = {
       '빠른 출력 속도로 엠보 효과 구현 가능',
     ],
   },
+  */
+
   "1010_visual": {
     name: 'DL-1010 Visual',
     tagline: '압도적인 출력 퀄리티 & 속도',

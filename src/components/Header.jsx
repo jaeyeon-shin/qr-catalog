@@ -62,12 +62,13 @@ export default function Header() {
               <div ref={menuRef} className="absolute right-1 top-full mt-1 z-50">
                 <nav className="rounded-md border border-gray-200 bg-white shadow-md p-1">
                   <ul className="flex flex-col text-sm w-max max-w-[92vw] font-medium">
-                    <li><Link to="/product/9060_visual"  onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UV9060 Visual</Link></li>
+                    {/*
+                    <li><Link to="/product/9060_visual"  onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UV9060 Visual</Link></li> 
                     <li><Link to="/product/0609_max2"    onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UV0609 Max2</Link></li>
                     <li><Link to="/product/0609_pe3s"    onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UV0609 PE3S</Link></li>
                     <li><Link to="/product/a3max"        onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UVA3 Max</Link></li>
                     <li><Link to="/product/dtf30"        onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UVDTF30</Link></li>
-                    <li><Link to="/product/dtf60"        onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UVDTF60</Link></li>
+                    <li><Link to="/product/dtf60"        onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">NC-UVDTF60</Link></li> */}
                     <li><Link to="/product/1010_visual"  onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">DL-1010 Visual</Link></li>
                     <li><Link to="/product/1810"         onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">DL-1810</Link></li>
                     <li><Link to="/product/2513"         onClick={() => setOpen(false)} className="block px-3 py-1.5 hover:bg-gray-50">DL-2513</Link></li>
