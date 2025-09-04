@@ -5,7 +5,160 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { MdChat, MdHome, MdDownload } from 'react-icons/md';
 
+/**
+ * ✅ 데이터 정의:
+ * - imageInfos에 title '전면/측면'이 있으면 우선 매칭. 없으면 images 배열 순서대로 전면/측면 추정.
+ * - 스펙(specs), 특장점(features) 배열은 표/리스트로 렌더링.
+ * - 필요 시 제품별 데이터만 여기서 손보면 UI 반영됨.
+ * - highlight: 제목 하이라이트 색상(hex)
+ */
 const productData = {
+  "9060_visual": {
+    name: 'NC-UV9060 Visual',
+    tagline: '풍부한 컬러와 카메라 포지셔닝',
+    highlight: '#f49f4f',
+    imageInfos: [
+      { src: '/9060visual_front.webp', title: '전면' },
+      { src: '/9060visual_side.webp', title: '측면' },
+      { src: '/product-a-3.JPG', title: '스펙' },
+      { src: '/product-a-4.JPG', title: '특장점' },
+    ],
+    pdf: '/9060visual_catalog.pdf',
+    specs: [
+      { label: '헤드', value: 'EPSON i3200-U1HD' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력(+Primer 출력 가능)' },
+      { label: '인쇄 면적', value: '900 x 600mm' },
+      { label: '인쇄 높이', value: '180mm' },
+      { label: '출력 컬러', value: 'CMYKLcLmLkLlk + W + V(+P)' },
+      { label: '장비 크기', value: '1,998 x 1,298 x 787mm' },
+      { label: '장비 무게', value: '250kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
+    ],
+    features: [
+      '소재 표면 패턴을 정확히 인식하기 위한 고화질 카메라 스캐닝',
+      '8컬러 + 화이트 + 바니시 동시출력',
+      '내구성 있는 소재로 제작되어 변형에 강하고 안정성 높은 하드웨어',
+      '고강성 프레임으로 장시간 안정 운용',
+    ],
+  },
+  "0609_max2": {
+    name: 'NC-UV0609 Max2',
+    tagline: '생산량에 최적화된 빠른 스피드',
+    highlight: '#e9a092',
+    images: ['/max2_front.webp', '/max2_side.webp'],
+    pdf: '/max2_catalog.pdf',
+    specs: [
+      { label: '헤드', value: 'EPSON i3200-U1HD' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 면적', value: '600 x 900mm' },
+      { label: '인쇄 높이', value: '180mm' },
+      { label: '출력 컬러', value: 'CMYKLcLmLkLlk + W + V(+P)' },
+      { label: '장비 크기', value: '1,676 x 1,640 x 994mm' },
+      { label: '장비 무게', value: '226kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
+    ],
+    features: [
+      '소프트웨어 제어를 통해 2~12mm 하이드롭 인쇄 지원',
+      '8컬러 + 화이트 + 바니시 동시출력',
+      '내구성 있는 소재로 제작되어 변형에 강하고 안정성 높은 하드웨어',
+    ],
+  },
+  "0609_pe3s": {
+    name: 'NC-UV0609 PE3S',
+    tagline: '하나로, 한번에, 속도까지',
+    highlight: '#10ff8a',
+    images: ['/pe3s_front.webp', '/pe3s_side.webp'],
+    pdf: '/pe3s_catalog.pdf',
+    specs: [
+      { label: '헤드', value: 'EPSON i1600 | i3200' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 면적', value: '600 x 900mm' },
+      { label: '인쇄 높이', value: '180mm' },
+      { label: '출력 컬러', value: 'CMYK + W + V' },
+      { label: '장비 크기', value: '1,676 x 1,627 x 693mm' },
+      { label: '장비 무게', value: '187kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
+    ],
+    features: [
+      '전동 로터리 지그 지원',
+      '컬러 + 화이트 + 바니시 동시출력',
+      'UV라이트 난반사 방지 기능',
+    ],
+  },
+  "a3max": {
+    name: 'NC-UVA3 Max',
+    tagline: '다재다능 팔방미인',
+    highlight: '#ff4b89',
+    images: ['/a3max_front.webp', '/a3max_side.webp'],
+    pdf: '/a3max_catalog.pdf',
+    specs: [
+      { label: '헤드', value: 'EPSON i3200-U1HD' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 면적', value: '297 x 420mm' },
+      { label: '인쇄 높이', value: '90mm' },
+      { label: '출력 컬러', value: 'CMYK + W + V' },
+      { label: '장비 크기', value: '1,000 x 902 x 592mm' },
+      { label: '장비 무게', value: '78kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
+    ],
+    features: [
+      '롤링, 로터리 지그 지원',
+      '하나의 헤드로 컬러 + 화이트 + 바니시 동시출력',
+      '조작이 쉽고 편리한 다기능 제어판',
+      '지능형 잉크 공급 시스템(잉크 부족 알림, 화이트 잉크 교반, 출력 시 잉크 사용량 자동 계산 등)',
+    ],
+  },
+  "dtf30": {
+    name: 'NC-UVDTF30',
+    tagline: 'UV-DTF & 라미네이팅 All-in-one',
+    highlight: '#df007d',
+    images: ['/dtf30_front.webp', '/dtf30_side.webp'],
+    pdf: '/dtf30_catalog.pdf',
+    specs: [
+      { label: '헤드', value: 'EPSON i3200-U1HD' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 너비', value: '300mm' },
+      { label: '인쇄 두께', value: '1mm' },
+      { label: '출력 컬러', value: 'CMYK + W + V' },
+      { label: '장비 크기', value: '919 x 980 x 450mm' },
+      { label: '장비 무게', value: '75kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
+    ],
+    features: [
+      '화이트 + 컬러 + 바니시 + 라미네이팅 동시 처리',
+      '30cm 인쇄폭, 길이 제한 없음, 1mm 이내 인쇄 두께',
+      'Vaccum 플랫폼 장착(베드에 소재 고정, 들뜸 현상 방지, 헤드 충돌 방지)',
+    ],
+  },
+  "dtf60": {
+    name: 'NC-UVDTF60',
+    tagline: 'UV-DTF & 라미네이팅 All-in-one',
+    highlight: '#334273',
+    images: ['/dtf60_front.webp', '/dtf60_side.webp'],
+    pdf: '/dtf60_catalog.pdf',
+    specs: [
+      { label: '헤드', value: 'EPSON i1600-E1' },
+      { label: '인쇄 모드', value: 'W + C + V 동시출력' },
+      { label: '인쇄 너비', value: '600mm' },
+      { label: '인쇄 두께', value: '2mm' },
+      { label: '출력 컬러', value: 'CMYK + W + V' },
+      { label: '장비 크기', value: '870 x 1,728 x 1,535mm' },
+      { label: '장비 무게', value: '190kg' },
+      { label: '소프트웨어', value: 'FlexiPRINT' },
+      { label: '이미지 형식', value: 'tiff, jpg, jpeg, eps, pdf, png, ai, psd' },
+    ],
+    features: [
+      '화이트 + 컬러 + 바니시 + 라미네이팅 동시 처리',
+      '60cm 인쇄폭, 길이 제한 없음, 2mm 이내 인쇄 두께',
+      'Vaccum 플랫폼 장착(베드에 소재 고정, 들뜸 현상 방지, 헤드 충돌 방지)',
+      '빠른 출력 속도로 엠보 효과 구현 가능',
+    ],
+  },
   "1010_visual": {
     name: 'DL-1010 Visual',
     tagline: '압도적인 출력 퀄리티 & 속도',
@@ -25,7 +178,7 @@ const productData = {
     ],
     features: [
       '화이트 + 컬러 + 바니시 + 프라이머 동시 출력 가능',
-      'Visual Point CCD 카메라 장착' ,
+      'Visual Point CCD 카메라 장착',
       '마그네틱 리니어 모터',
       '메탈 엔코더',
       '소재 출력 높이 35cm',
@@ -53,7 +206,7 @@ const productData = {
       'Flatbed 서포트 포인트(25개) - 평판 정밀도 향상',
       '마그네틱 리니어 모터',
       '메탈 엔코더',
-      '형광잉크 탑재 가능' ,
+      '형광잉크 탑재 가능',
       '프라이머 탑재 가능',
       '작업자의 안전을 최우선으로 고려한 세이프 가드 장착',
       '4배열 헤드플레이트 구조로 유연한 헤드 구성을 가능하게 하여 사용자의 편의성을 높임',
@@ -80,7 +233,7 @@ const productData = {
       '동급 대비 2배 이상의 Flatbed 서포트 포인트(48개) - 평판 정밀도 향상 ',
       '마그네틱 리니어 모터',
       '메탈 엔코더',
-      '형광잉크 탑재 가능' ,
+      '형광잉크 탑재 가능',
       '프라이머 탑재 가능',
       '작업자의 안전을 최우선으로 고려한 세이프 가드 장착',
       '4배열 헤드플레이트 구조로 유연한 헤드 구성을 가능하게 하여 사용자의 편의성을 높임',
@@ -266,10 +419,18 @@ export default function ProductDetail() {
             )}
           </div>
 
-          <p className="text-[14px] lg:text-sm text-gray-500 text-center leading-tight break-keep">
-            해당 제품은 곧 공식 홈페이지에 업데이트될 예정입니다.<br />
-            문의가 필요하시면 <span className="font-semibold text-blue-600">‘상담하기’ 버튼</span>을 통해 남겨주세요.
-          </p>
+
+          {/* ✅ 조건부 안내문구 */}
+          {["2513", "1810", "1010_visual"].includes(id) ? (
+            <p className="text-[14px] lg:text-sm text-gray-500 text-center leading-tight break-keep">
+              해당 제품은 곧 공식 홈페이지에 업데이트될 예정입니다.<br />
+              문의가 필요하시면 <span className="font-semibold text-blue-600">‘상담하기’ 버튼</span>을 통해 남겨주세요.
+            </p>
+          ) : (
+            <p className="text-[14px] lg:text-sm text-gray-500 text-center leading-tight break-keep">
+              문의가 필요하시면 <span className="font-semibold text-blue-600">‘상담하기’ 버튼</span>을 통해 남겨주세요.
+            </p>
+          )}
 
           <div className="border-t border-gray-100 pt-3 text-center text-[13px] lg:text-base text-gray-500 leading-snug">
             (주)씨엠테크 | 032-361-2114<br />
